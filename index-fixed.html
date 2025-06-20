@@ -341,8 +341,39 @@
             }
         };
 
+        // Colores oficiales de AWS para cada servicio
+        const awsServiceColors = {
+            s3: '#5a9d2e',          // Verde - Storage
+            lambda: '#ff9900',      // Naranja - Compute
+            ec2: '#ff9900',         // Naranja - Compute
+            rds: '#3841c5',         // Azul - Database
+            eks: '#ff9900',         // Naranja - Compute
+            sagemaker: '#8c4fff',   // Púrpura - Machine Learning
+            kinesis: '#8c4fff',     // Púrpura - Analytics
+            redshift: '#8c4fff',    // Púrpura - Analytics
+            cloudformation: '#ff9900', // Naranja - Management Tools
+            elasticache: '#3841c5', // Azul - Database
+            sns: '#ff4b4b',         // Rojo - Application Integration
+            sqs: '#ff4b4b',         // Rojo - Application Integration
+            dynamodb: '#3841c5',    // Azul - Database
+            cloudwatch: '#ff9900'   // Naranja - Management Tools
+        };
+
         // Servicios AWS por dificultad (ahora se obtienen de las traducciones)
         function getAWSServices() {
+            return {
+                easy: translations[currentLanguage].services.easy.map(service => ({
+                    name: service.name,
+                    color: awsServiceColors[service.name.toLowerCase()],
+                    description: service.description
+                })),
+                hard: translations[currentLanguage].services.hard.map(service => ({
+                    name: service.name,
+                    color: awsServiceColors[service.name.toLowerCase()],
+                    description: service.description
+                }))
+            };
+        }
             return {
                 easy: translations[currentLanguage].services.easy.map(service => ({
                     name: service.name,
@@ -414,20 +445,23 @@
             
             allServiceNames.forEach(serviceName => {
                 try {
+                    const serviceColor = awsServiceColors[serviceName] || '#FF9900';
+                    const colorHex = parseInt(serviceColor.replace('#', '0x'));
+                    
                     graphics.fillStyle(0xFFFFFF);
                     graphics.fillRoundedRect(0, 0, 120, 160, 10);
-                    graphics.lineStyle(4, 0xFF9900);
+                    graphics.lineStyle(4, colorHex);
                     graphics.strokeRoundedRect(2, 2, 116, 156, 10);
                     
-                    // Área del icono
-                    graphics.fillStyle(0xFF9900);
+                    // Área del icono con color específico del servicio
+                    graphics.fillStyle(colorHex);
                     graphics.fillRoundedRect(10, 10, 100, 80, 5);
                     
                     // Dibujar icono del servicio
                     drawServiceIcon(graphics, serviceName, 60, 50);
                     
-                    // Área del texto
-                    graphics.fillStyle(0x232F3E);
+                    // Área del texto con color específico del servicio
+                    graphics.fillStyle(colorHex);
                     graphics.fillRoundedRect(10, 100, 100, 50, 5);
                     
                     graphics.generateTexture(`card-${serviceName}`, 120, 160);
@@ -441,7 +475,7 @@
                     graphics.strokeRoundedRect(2, 2, 116, 156, 10);
                     graphics.fillStyle(0xFF9900);
                     graphics.fillRoundedRect(10, 10, 100, 80, 5);
-                    graphics.fillStyle(0x232F3E);
+                    graphics.fillStyle(0xFF9900);
                     graphics.fillRoundedRect(10, 100, 100, 50, 5);
                     graphics.generateTexture(`card-${serviceName}`, 120, 160);
                     graphics.clear();
@@ -542,8 +576,13 @@
         }
 
         function drawServiceIcon(graphics, serviceName, centerX, centerY) {
-            graphics.fillStyle(0x232F3E);
-            graphics.lineStyle(2, 0x232F3E);
+            // Usar color contrastante para el icono (blanco para fondos oscuros, negro para fondos claros)
+            const serviceColor = awsServiceColors[serviceName] || '#FF9900';
+            const isLightBackground = isLightColor(serviceColor);
+            const iconColor = isLightBackground ? 0x000000 : 0xFFFFFF; // Negro para fondos claros, blanco para oscuros
+            
+            graphics.fillStyle(iconColor);
+            graphics.lineStyle(2, iconColor);
             
             try {
                 switch(serviceName.toLowerCase()) {
@@ -702,6 +741,18 @@
                 // Icono de fallback
                 graphics.fillRect(centerX - 8, centerY - 8, 16, 16);
             }
+        }
+
+        // Función auxiliar para determinar si un color es claro u oscuro
+        function isLightColor(hexColor) {
+            const hex = hexColor.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            
+            // Calcular luminancia
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return luminance > 0.5;
         }
 
         function setupCards() {
