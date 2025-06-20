@@ -83,7 +83,7 @@
         
         .language-selector {
             position: absolute;
-            top: 20px;
+            top: 50px;
             right: 20px;
             background: #FF9900;
             color: #232F3E;
@@ -113,7 +113,7 @@
         
         .sound-toggle {
             position: absolute;
-            top: 20px;
+            top: 50px;
             right: 180px;
             background: #FF9900;
             color: #232F3E;
@@ -234,7 +234,7 @@
         
         #ui {
             position: absolute;
-            top: 15px;
+            top: 50px;
             left: 15px;
             right: 15px;
             z-index: 999;
@@ -256,13 +256,105 @@
             text-shadow: 2px 2px 0px #000000;
         }
         
-        .ui-value {
+        .social-links {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1003;
+        }
+        
+        .social-link {
+            background: linear-gradient(45deg, #333, #555);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 9px;
+            font-weight: bold;
+            font-family: 'Press Start 2P', monospace;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.1s ease;
+            box-shadow: 
+                0 0 0 2px #FF9900,
+                0 0 0 4px #333,
+                0 2px 0 2px #333,
+                0 2px 0 4px rgba(0,0,0,0.4);
+        }
+        
+        .social-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 0 0 2px #FF9900,
+                0 0 0 4px #333,
+                0 3px 0 2px #333,
+                0 3px 0 4px rgba(0,0,0,0.4),
+                0 0 15px rgba(255, 153, 0, 0.5);
+        }
+        
+        .social-link:active {
+            transform: translateY(1px);
+            box-shadow: 
+                0 0 0 2px #FF9900,
+                0 0 0 4px #333,
+                0 1px 0 2px #333,
+                0 1px 0 4px rgba(0,0,0,0.4);
+        }
+        
+        .social-link.github {
+            background: linear-gradient(45deg, #333, #555);
+        }
+        
+        .social-link.github:hover {
+            background: linear-gradient(45deg, #444, #666);
+        }
+        
+        .social-link.youtube {
+            background: linear-gradient(45deg, #FF0000, #CC0000);
+        }
+        
+        .social-link.youtube:hover {
+            background: linear-gradient(45deg, #FF3333, #FF0000);
+        }
+        
+        .social-link.linkedin {
+            background: linear-gradient(45deg, #0077B5, #005885);
+        }
+        
+        .social-link.linkedin:hover {
+            background: linear-gradient(45deg, #0099DD, #0077B5);
+        }
+        
+        .social-icon {
+            font-size: 10px;
+        }
+        
+        .github-star {
+            color: #FFD700;
+            font-size: 10px;
+            animation: starTwinkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes starTwinkle {
+            0%, 100% { 
+                text-shadow: 0 0 5px #FFD700;
+                transform: scale(1);
+            }
+            50% { 
+                text-shadow: 0 0 10px #FFD700, 0 0 15px #FFD700;
+                transform: scale(1.1);
+            }
+        }
+        
+        .social-count {
             color: #FF9900;
-            font-size: 14px;
-            text-shadow: 
-                2px 2px 0px #000000,
-                0 0 10px #FF9900;
-            animation: pixelPulse 1.5s ease-in-out infinite;
+            font-weight: bold;
+            font-size: 8px;
         }
         
         @keyframes pixelPulse {
@@ -336,6 +428,24 @@
 </head>
 <body>
     <div id="game-container">
+        <div class="social-links">
+            <a href="https://github.com/tu-usuario/aws-memory-game" target="_blank" class="social-link github" id="github-link">
+                <span class="github-star">⭐</span>
+                <span id="github-text">GITHUB</span>
+                <span class="social-count" id="star-count">...</span>
+            </a>
+            
+            <a href="https://youtube.com/@tu-canal" target="_blank" class="social-link youtube" id="youtube-link">
+                <span class="social-icon">📺</span>
+                <span id="youtube-text">YOUTUBE</span>
+            </a>
+            
+            <a href="https://linkedin.com/in/tu-perfil" target="_blank" class="social-link linkedin" id="linkedin-link">
+                <span class="social-icon">💼</span>
+                <span id="linkedin-text">LINKEDIN</span>
+            </a>
+        </div>
+        
         <div id="menu">
             <button id="sound-toggle" class="sound-toggle" onclick="toggleSound()">
                 🔊 <span id="sound-text">Sonido ON</span>
@@ -383,6 +493,18 @@
         let backgroundMusic = null;
         let soundEnabled = true;
         let musicGainNode = null;
+        
+        // Configuración del repositorio de GitHub
+        const GITHUB_REPO = {
+            owner: 'tu-usuario', // Cambia por tu usuario de GitHub
+            name: 'aws-memory-game' // Cambia por el nombre de tu repositorio
+        };
+        
+        // Configuración de redes sociales
+        const SOCIAL_LINKS = {
+            youtube: 'https://youtube.com/@tu-canal', // Cambia por tu canal
+            linkedin: 'https://linkedin.com/in/tu-perfil' // Cambia por tu perfil
+        };
 
         // Sistema de traducciones
         const translations = {
@@ -396,6 +518,9 @@
                 resetButton: 'Volver al Menú',
                 soundOn: 'Sonido ON',
                 soundOff: 'Sonido OFF',
+                githubLink: 'GITHUB',
+                youtubeLink: 'YOUTUBE',
+                linkedinLink: 'LINKEDIN',
                 seconds: 's',
                 easy: 'FÁCIL',
                 hard: 'DIFÍCIL',
@@ -433,6 +558,9 @@
                 resetButton: 'Back to Menu',
                 soundOn: 'Sound ON',
                 soundOff: 'Sound OFF',
+                githubLink: 'GITHUB',
+                youtubeLink: 'YOUTUBE',
+                linkedinLink: 'LINKEDIN',
                 seconds: 's',
                 easy: 'EASY',
                 hard: 'HARD',
@@ -692,6 +820,49 @@
             ctx.globalAlpha = 1;
         }
 
+        // Función para obtener información del repositorio de GitHub
+        async function fetchGitHubRepoInfo() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO.owner}/${GITHUB_REPO.name}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateGitHubLink(data.stargazers_count, data.html_url);
+                } else {
+                    // Si falla la API, mostrar enlace genérico
+                    updateGitHubLink('⭐', `https://github.com/${GITHUB_REPO.owner}/${GITHUB_REPO.name}`);
+                }
+            } catch (error) {
+                console.log('Error fetching GitHub data:', error);
+                // Fallback: mostrar enlace sin contador
+                updateGitHubLink('⭐', `https://github.com/${GITHUB_REPO.owner}/${GITHUB_REPO.name}`);
+            }
+        }
+
+        // Función para actualizar el enlace de GitHub con los datos obtenidos
+        function updateGitHubLink(starCount, repoUrl) {
+            const githubLink = document.getElementById('github-link');
+            const starCountElement = document.getElementById('star-count');
+            
+            if (githubLink && starCountElement) {
+                githubLink.href = repoUrl;
+                
+                // Formatear el número de estrellas
+                let displayCount;
+                if (typeof starCount === 'number') {
+                    if (starCount >= 1000) {
+                        displayCount = `${(starCount / 1000).toFixed(1)}K`;
+                    } else {
+                        displayCount = starCount.toString();
+                    }
+                } else {
+                    displayCount = starCount;
+                }
+                
+                starCountElement.textContent = displayCount;
+            }
+        }
+
         // Función para generar imagen de fondo estilo 8-bits
         function initAudio() {
             try {
@@ -946,7 +1117,7 @@
             console.log('Create iniciado');
             
             // Título del juego con estilo pixelado
-            this.add.text(400, 80, 'AWS MEMORY GAME', {
+            this.add.text(400, 110, 'AWS MEMORY GAME', {
                 fontSize: '20px',
                 fill: '#FF9900',
                 fontFamily: 'Press Start 2P, monospace',
@@ -1161,11 +1332,11 @@
                 
                 const scaledCardHeight = 160 * cardScale;
                 const totalCardsHeight = 3 * scaledCardHeight;
-                const availableSpaceY = 600 - totalCardsHeight - 120;
+                const availableSpaceY = 600 - totalCardsHeight - 150; // -150 para UI superior y enlaces
                 spacingY = availableSpaceY / (3 + 1);
                 
                 startX = spacingX;
-                startY = 120 + spacingY;
+                startY = 150 + spacingY; // 150 para dejar espacio a enlaces y UI
             } else {
                 // Para 8 cartas (2×4) - Distribución equitativa mejorada
                 cardScale = 1.0;
@@ -1178,11 +1349,11 @@
                 spacingX = availableSpaceX / (cols + 1); // +1 para incluir bordes
                 
                 const totalCardsHeight = 2 * scaledCardHeight; // 2 filas
-                const availableSpaceY = 600 - totalCardsHeight - 120; // -120 para UI superior
+                const availableSpaceY = 600 - totalCardsHeight - 150; // -150 para UI superior y enlaces
                 spacingY = availableSpaceY / (2 + 1); // +1 para incluir bordes
                 
                 startX = spacingX;
-                startY = 120 + spacingY; // 120 para dejar espacio al UI
+                startY = 150 + spacingY; // 150 para dejar espacio a enlaces y UI
             }
             
             cards = [];
@@ -1375,6 +1546,15 @@
             const soundIcon = soundEnabled ? '🔊' : '🔇';
             soundButton.innerHTML = `${soundIcon} <span id="sound-text">${soundText}</span>`;
             
+            // Actualizar enlaces sociales
+            document.getElementById('github-text').textContent = t.githubLink;
+            document.getElementById('youtube-text').textContent = t.youtubeLink;
+            document.getElementById('linkedin-text').textContent = t.linkedinLink;
+            
+            // Actualizar URLs de redes sociales
+            document.getElementById('youtube-link').href = SOCIAL_LINKS.youtube;
+            document.getElementById('linkedin-link').href = SOCIAL_LINKS.linkedin;
+            
             // Actualizar UI del juego
             document.getElementById('time-label').textContent = t.timeLabel;
             document.getElementById('pairs-label').textContent = t.pairsLabel;
@@ -1461,6 +1641,9 @@
             
             // Inicializar interfaz con idioma por defecto
             updateUI();
+            
+            // Cargar información del repositorio de GitHub
+            fetchGitHubRepoInfo();
             
             // Inicializar audio (se activará cuando el usuario interactúe)
             document.addEventListener('click', () => {
