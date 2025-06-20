@@ -169,16 +169,32 @@
 <body>
     <div id="game-container">
         <div id="menu">
-            <h1 class="menu-title">AWS MEMORY GAME</h1>
-            <p class="menu-subtitle">
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <select id="language-selector" onchange="changeLanguage()" style="
+                    background: #FF9900;
+                    color: #232F3E;
+                    border: 2px solid #232F3E;
+                    padding: 8px 12px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    border-radius: 5px;
+                    cursor: pointer;
+                ">
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="en">🇺🇸 English</option>
+                </select>
+            </div>
+            
+            <h1 class="menu-title" id="game-title">AWS MEMORY GAME</h1>
+            <p class="menu-subtitle" id="game-subtitle">
                 Pon a prueba tu conocimiento de los servicios de AWS en este divertido juego de memoria. 
                 Encuentra los pares de servicios antes de que se acabe el tiempo.
             </p>
             
             <div class="difficulty-info">
                 <div class="difficulty-card">
-                    <div class="difficulty-title">FÁCIL</div>
-                    <div class="difficulty-services">
+                    <div class="difficulty-title" id="easy-title">FÁCIL</div>
+                    <div class="difficulty-services" id="easy-info">
                         • S3 - Simple Storage<br>
                         • Lambda - Functions<br>
                         • EC2 - Virtual Servers<br>
@@ -188,8 +204,8 @@
                 </div>
                 
                 <div class="difficulty-card">
-                    <div class="difficulty-title">DIFÍCIL</div>
-                    <div class="difficulty-services">
+                    <div class="difficulty-title" id="hard-title">DIFÍCIL</div>
+                    <div class="difficulty-services" id="hard-info">
                         • EKS - Kubernetes<br>
                         • SageMaker - ML Platform<br>
                         • Kinesis - Data Streaming<br>
@@ -204,22 +220,22 @@
             </div>
             
             <div>
-                <button class="menu-button" onclick="startGame('easy')">Nivel Fácil</button>
-                <button class="menu-button" onclick="startGame('hard')">Nivel Difícil</button>
+                <button class="menu-button" id="easy-button" onclick="startGame('easy')">Nivel Fácil</button>
+                <button class="menu-button" id="hard-button" onclick="startGame('hard')">Nivel Difícil</button>
             </div>
         </div>
         
         <div id="ui" class="hidden">
             <div class="ui-item">
-                <span>⏱️ Tiempo:</span>
-                <span class="ui-value"><span id="timer">30</span>s</span>
+                <span id="time-label">⏱️ Tiempo:</span>
+                <span class="ui-value"><span id="timer">30</span><span id="seconds-label">s</span></span>
             </div>
             <div class="ui-item">
-                <span>🎯 Pares:</span>
+                <span id="pairs-label">🎯 Pares:</span>
                 <span class="ui-value"><span id="pairs">0/4</span></span>
             </div>
             <div class="ui-item">
-                <span>📊 Nivel:</span>
+                <span id="level-label">📊 Nivel:</span>
                 <span class="ui-value" id="level">FÁCIL</span>
             </div>
         </div>
@@ -241,26 +257,101 @@
         let gameActive = false;
         let currentLevel = 'easy';
         let gameTimer = null;
+        let currentLanguage = 'es'; // Idioma por defecto: español
 
-        // Servicios AWS por dificultad
-        const awsServices = {
-            easy: [
-                { name: 'S3', color: '#FF9900', description: 'Simple Storage Service' },
-                { name: 'Lambda', color: '#FF9900', description: 'Serverless Functions' },
-                { name: 'EC2', color: '#FF9900', description: 'Virtual Servers' },
-                { name: 'RDS', color: '#FF9900', description: 'Managed Database' }
-            ],
-            hard: [
-                { name: 'EKS', color: '#FF9900', description: 'Kubernetes Service' },
-                { name: 'SageMaker', color: '#FF9900', description: 'Machine Learning' },
-                { name: 'Kinesis', color: '#FF9900', description: 'Data Streaming' },
-                { name: 'Redshift', color: '#FF9900', description: 'Data Warehouse' },
-                { name: 'CloudFormation', color: '#FF9900', description: 'Infrastructure as Code' },
-                { name: 'ElastiCache', color: '#FF9900', description: 'In-Memory Cache' },
-                { name: 'SNS', color: '#FF9900', description: 'Notification Service' },
-                { name: 'SQS', color: '#FF9900', description: 'Message Queue' }
-            ]
+        // Textos en diferentes idiomas
+        const translations = {
+            es: {
+                title: 'AWS MEMORY GAME',
+                subtitle: 'Pon a prueba tu conocimiento de los servicios de AWS en este divertido juego de memoria. Encuentra los pares de servicios antes de que se acabe el tiempo.',
+                easyLevel: 'Nivel Fácil',
+                hardLevel: 'Nivel Difícil',
+                easyTitle: 'FÁCIL',
+                hardTitle: 'DIFÍCIL',
+                time: '⏱️ Tiempo:',
+                pairs: '🎯 Pares:',
+                level: '📊 Nivel:',
+                reset: '🔄 Reiniciar',
+                won: '¡GANASTE!',
+                timeUp: 'TIEMPO AGOTADO',
+                timeRemaining: 'Tiempo restante:',
+                pairsFound: 'Pares encontrados:',
+                seconds: 's',
+                services: {
+                    easy: [
+                        { name: 'S3', description: 'Almacenamiento Simple' },
+                        { name: 'Lambda', description: 'Funciones Serverless' },
+                        { name: 'EC2', description: 'Servidores Virtuales' },
+                        { name: 'RDS', description: 'Base de Datos' }
+                    ],
+                    hard: [
+                        { name: 'EKS', description: 'Servicio Kubernetes' },
+                        { name: 'SageMaker', description: 'Plataforma ML' },
+                        { name: 'Kinesis', description: 'Streaming de Datos' },
+                        { name: 'Redshift', description: 'Data Warehouse' },
+                        { name: 'CloudFormation', description: 'Infraestructura como Código' },
+                        { name: 'ElastiCache', description: 'Cache en Memoria' },
+                        { name: 'SNS', description: 'Servicio de Notificaciones' },
+                        { name: 'SQS', description: 'Cola de Mensajes' }
+                    ]
+                },
+                easyInfo: '• S3 - Almacenamiento Simple<br>• Lambda - Funciones<br>• EC2 - Servidores Virtuales<br>• RDS - Bases de Datos<br><strong>8 cartas (2×4) - 30s</strong>',
+                hardInfo: '• EKS - Kubernetes<br>• SageMaker - Plataforma ML<br>• Kinesis - Streaming de Datos<br>• Redshift - Data Warehouse<br>• CloudFormation - IaC<br>• ElastiCache - Cache<br>• SNS - Notificaciones<br>• SQS - Cola de Mensajes<br><strong>16 cartas (3×6) - 60s</strong>'
+            },
+            en: {
+                title: 'AWS MEMORY GAME',
+                subtitle: 'Test your knowledge of AWS services in this fun memory game. Find all service pairs before time runs out.',
+                easyLevel: 'Easy Level',
+                hardLevel: 'Hard Level',
+                easyTitle: 'EASY',
+                hardTitle: 'HARD',
+                time: '⏱️ Time:',
+                pairs: '🎯 Pairs:',
+                level: '📊 Level:',
+                reset: '🔄 Reset',
+                won: 'YOU WON!',
+                timeUp: 'TIME\'S UP',
+                timeRemaining: 'Time remaining:',
+                pairsFound: 'Pairs found:',
+                seconds: 's',
+                services: {
+                    easy: [
+                        { name: 'S3', description: 'Simple Storage Service' },
+                        { name: 'Lambda', description: 'Serverless Functions' },
+                        { name: 'EC2', description: 'Virtual Servers' },
+                        { name: 'RDS', description: 'Managed Database' }
+                    ],
+                    hard: [
+                        { name: 'EKS', description: 'Kubernetes Service' },
+                        { name: 'SageMaker', description: 'Machine Learning' },
+                        { name: 'Kinesis', description: 'Data Streaming' },
+                        { name: 'Redshift', description: 'Data Warehouse' },
+                        { name: 'CloudFormation', description: 'Infrastructure as Code' },
+                        { name: 'ElastiCache', description: 'In-Memory Cache' },
+                        { name: 'SNS', description: 'Notification Service' },
+                        { name: 'SQS', description: 'Message Queue' }
+                    ]
+                },
+                easyInfo: '• S3 - Simple Storage<br>• Lambda - Functions<br>• EC2 - Virtual Servers<br>• RDS - Databases<br><strong>8 cards (2×4) - 30s</strong>',
+                hardInfo: '• EKS - Kubernetes<br>• SageMaker - ML Platform<br>• Kinesis - Data Streaming<br>• Redshift - Data Warehouse<br>• CloudFormation - IaC<br>• ElastiCache - Cache<br>• SNS - Notifications<br>• SQS - Message Queue<br><strong>16 cards (3×6) - 60s</strong>'
+            }
         };
+
+        // Servicios AWS por dificultad (ahora se obtienen de las traducciones)
+        function getAWSServices() {
+            return {
+                easy: translations[currentLanguage].services.easy.map(service => ({
+                    name: service.name,
+                    color: '#FF9900',
+                    description: service.description
+                })),
+                hard: translations[currentLanguage].services.hard.map(service => ({
+                    name: service.name,
+                    color: '#FF9900',
+                    description: service.description
+                }))
+            };
+        }
 
         // Configuración del juego Phaser
         const gameConfig = {
@@ -317,9 +408,10 @@
             graphics.generateTexture('card-back', 120, 160);
             graphics.clear();
             
-            // Crear texturas para servicios
-            const services = [...awsServices.easy, ...awsServices.hard];
-            services.forEach(service => {
+            // Lista fija de servicios para generar texturas (independiente del idioma)
+            const allServiceNames = ['s3', 'lambda', 'ec2', 'rds', 'eks', 'sagemaker', 'kinesis', 'redshift', 'cloudformation', 'elasticache', 'sns', 'sqs'];
+            
+            allServiceNames.forEach(serviceName => {
                 try {
                     graphics.fillStyle(0xFFFFFF);
                     graphics.fillRoundedRect(0, 0, 120, 160, 10);
@@ -331,16 +423,16 @@
                     graphics.fillRoundedRect(10, 10, 100, 80, 5);
                     
                     // Dibujar icono del servicio
-                    drawServiceIcon(graphics, service.name, 60, 50);
+                    drawServiceIcon(graphics, serviceName, 60, 50);
                     
                     // Área del texto
                     graphics.fillStyle(0x232F3E);
                     graphics.fillRoundedRect(10, 100, 100, 50, 5);
                     
-                    graphics.generateTexture(`card-${service.name.toLowerCase()}`, 120, 160);
+                    graphics.generateTexture(`card-${serviceName}`, 120, 160);
                     graphics.clear();
                 } catch (error) {
-                    console.error(`Error creando textura para ${service.name}:`, error);
+                    console.error(`Error creando textura para ${serviceName}:`, error);
                     // Crear una textura básica sin icono
                     graphics.fillStyle(0xFFFFFF);
                     graphics.fillRoundedRect(0, 0, 120, 160, 10);
@@ -350,7 +442,7 @@
                     graphics.fillRoundedRect(10, 10, 100, 80, 5);
                     graphics.fillStyle(0x232F3E);
                     graphics.fillRoundedRect(10, 100, 100, 50, 5);
-                    graphics.generateTexture(`card-${service.name.toLowerCase()}`, 120, 160);
+                    graphics.generateTexture(`card-${serviceName}`, 120, 160);
                     graphics.clear();
                 }
             });
@@ -491,6 +583,7 @@
         }
 
         function setupCards() {
+            const awsServices = getAWSServices(); // Obtener servicios traducidos
             const services = awsServices[currentLevel];
             const cardData = [];
             
@@ -616,13 +709,13 @@
             clearInterval(gameTimer);
             
             this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
-            this.add.text(400, 250, '¡GANASTE!', {
+            this.add.text(400, 250, translations[currentLanguage].won, {
                 fontSize: '48px',
                 fill: '#90EE90',
                 fontFamily: 'monospace'
             }).setOrigin(0.5);
             
-            this.add.text(400, 320, `Tiempo restante: ${timeLeft}s`, {
+            this.add.text(400, 320, `${translations[currentLanguage].timeRemaining} ${timeLeft}${translations[currentLanguage].seconds}`, {
                 fontSize: '20px',
                 fill: '#FFFFFF',
                 fontFamily: 'monospace'
@@ -634,9 +727,15 @@
             clearInterval(gameTimer);
             
             this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
-            this.add.text(400, 250, 'TIEMPO AGOTADO', {
+            this.add.text(400, 250, translations[currentLanguage].timeUp, {
                 fontSize: '40px',
                 fill: '#FF6B6B',
+                fontFamily: 'monospace'
+            }).setOrigin(0.5);
+            
+            this.add.text(400, 320, `${translations[currentLanguage].pairsFound} ${matchedPairs}/${totalPairs}`, {
+                fontSize: '20px',
+                fill: '#FFFFFF',
                 fontFamily: 'monospace'
             }).setOrigin(0.5);
         }
@@ -658,6 +757,35 @@
                     gameOver.call(game.scene.scenes[0]);
                 }
             }, 1000);
+        }
+
+        // Función para cambiar idioma
+        function changeLanguage() {
+            const selector = document.getElementById('language-selector');
+            currentLanguage = selector.value;
+            updateUI();
+        }
+
+        // Función para actualizar toda la interfaz con el idioma seleccionado
+        function updateUI() {
+            const t = translations[currentLanguage];
+            
+            // Actualizar menú principal
+            document.getElementById('game-title').textContent = t.title;
+            document.getElementById('game-subtitle').textContent = t.subtitle;
+            document.getElementById('easy-title').textContent = t.easyTitle;
+            document.getElementById('hard-title').textContent = t.hardTitle;
+            document.getElementById('easy-info').innerHTML = t.easyInfo;
+            document.getElementById('hard-info').innerHTML = t.hardInfo;
+            document.getElementById('easy-button').textContent = t.easyLevel;
+            document.getElementById('hard-button').textContent = t.hardLevel;
+            
+            // Actualizar UI del juego
+            document.getElementById('time-label').textContent = t.time;
+            document.getElementById('pairs-label').textContent = t.pairs;
+            document.getElementById('level-label').textContent = t.level;
+            document.getElementById('seconds-label').textContent = t.seconds;
+            document.getElementById('reset-btn').innerHTML = t.reset;
         }
 
         // Funciones del menú
@@ -682,7 +810,8 @@
             matchedPairs = 0;
             flippedCards = [];
             
-            document.getElementById('level').textContent = level.toUpperCase();
+            const t = translations[currentLanguage];
+            document.getElementById('level').textContent = level === 'easy' ? t.easyTitle : t.hardTitle;
             document.getElementById('timer').textContent = timeLeft;
             document.getElementById('pairs').textContent = `0/${totalPairs}`;
             
@@ -719,6 +848,9 @@
         window.addEventListener('load', () => {
             console.log('AWS Memory Game cargado');
             console.log('Phaser disponible:', typeof Phaser !== 'undefined');
+            
+            // Inicializar interfaz con idioma por defecto
+            updateUI();
             
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape') {
