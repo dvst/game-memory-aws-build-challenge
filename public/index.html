@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="AWS Memory Game - Juego de memoria con servicios de AWS" />
+    <title>AWS Memory Game</title>
+    <style>
+        /* Pixel font CSS integrado */
+        @font-face {
+            font-family: 'PixelFont';
+            src: url('./assets/fonts/pixel-font.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'PixelFont', monospace, sans-serif;
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            overflow: hidden;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <noscript>Necesitas habilitar JavaScript para ejecutar esta aplicación.</noscript>
+    <div id="root"></div>
+</body>
+</html>

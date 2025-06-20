@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AWS Memory Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        
+        #game-container {
+            border: 6px solid #232F3E;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ui-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #FF9900;
+        }
+        
+        .ui-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ui-value {
+            color: #FF9900;
+            font-size: 20px;
+        }
+        
+        .menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            text-align: center;
+        }
+        
+        .menu-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #FF9900;
+            text-shadow: 4px 4px 0px #232F3E;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 4px 4px 0px #232F3E, 0 0 10px #FF9900; }
+            to { text-shadow: 4px 4px 0px #232F3E, 0 0 20px #FF9900, 0 0 30px #FF9900; }
+        }
+        
+        .menu-subtitle {
+            font-size: 16px;
+            margin-bottom: 40px;
+            color: #CCCCCC;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+        
+        .menu-button {
+            background: linear-gradient(45deg, #FF9900, #FFB84D);
+            color: #232F3E;
+            border: 3px solid #232F3E;
+            padding: 20px 40px;
+            margin: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .menu-button:hover {
+            background: linear-gradient(45deg, #232F3E, #3A4A5C);
+            color: #FF9900;
+            border-color: #FF9900;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        
+        .menu-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .difficulty-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .difficulty-card {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #FF9900;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            max-width: 200px;
+        }
+        
+        .difficulty-title {
+            color: #FF9900;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .difficulty-services {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #CCCCCC;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .reset-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #FF6B6B;
+            color: white;
+            border: 2px solid #232F3E;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1001;
+        }
+        
+        .reset-button:hover {
+            background: #FF5252;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 900px) {
+            #game-container {
+                margin: 10px;
+            }
+            
+            .menu-title {
+                font-size: 36px;
+            }
+            
+            .difficulty-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="menu" class="menu-overlay">
+            <h1 class="menu-title">AWS MEMORY GAME</h1>
+            <p class="menu-subtitle">
+                Pon a prueba tu conocimiento de los servicios de AWS en este divertido juego de memoria. 
+                Encuentra los pares de servicios antes de que se acabe el tiempo.
+            </p>
+            
+            <div class="difficulty-info">
+                <div class="difficulty-card">
+                    <div class="difficulty-title">FÁCIL</div>
+                    <div class="difficulty-services">
+                        • S3 - Simple Storage<br>
+                        • Lambda - Functions<br>
+                        • EC2 - Virtual Servers<br>
+                        • RDS - Databases
+                    </div>
+                </div>
+                
+                <div class="difficulty-card">
+                    <div class="difficulty-title">DIFÍCIL</div>
+                    <div class="difficulty-services">
+                        • EKS - Kubernetes<br>
+                        • SageMaker - ML Platform<br>
+                        • Kinesis - Data Streaming<br>
+                        • Redshift - Data Warehouse
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <button class="menu-button" onclick="startGame('easy')">Nivel Fácil</button>
+                <button class="menu-button" onclick="startGame('hard')">Nivel Difícil</button>
+            </div>
+        </div>
+        
+        <div id="ui" class="ui-overlay hidden">
+            <div class="ui-item">
+                <span>⏱️ Tiempo:</span>
+                <span class="ui-value"><span id="timer">30</span>s</span>
+            </div>
+            <div class="ui-item">
+                <span>🎯 Pares:</span>
+                <span class="ui-value"><span id="pairs">0</span>/4</span>
+            </div>
+            <div class="ui-item">
+                <span>📊 Nivel:</span>
+                <span class="ui-value" id="level">FÁCIL</span>
+            </div>
+        </div>
+        
+        <button id="reset-btn" class="reset-button hidden" onclick="resetToMenu()">🔄 Reiniciar</button>
+        
+        <div id="phaser-game"></div>
+    </div>
+
+    <script src="public/lib/phaser.min.js"></script>
+    <script>
+        // Verificar que Phaser se cargó correctamente
+        window.addEventListener('load', () => {
+            console.log('Página cargada');
+            console.log('Phaser disponible:', typeof Phaser !== 'undefined');
+            if (typeof Phaser === 'undefined') {
+                console.error('Phaser no se cargó correctamente');
+                document.body.innerHTML = '<div style="color: white; text-align: center; padding: 50px;">Error: No se pudo cargar Phaser.js</div>';
+            }
+        });
+    </script>
+    <script src="src/game-simple.js"></script>
+</body>
+</html>

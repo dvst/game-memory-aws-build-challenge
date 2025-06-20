@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AWS Memory Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        #game-container {
+            border: 6px solid #232F3E;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            background: #000;
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+        
+        #menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+        }
+        
+        .menu-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #FF9900;
+            text-shadow: 4px 4px 0px #232F3E;
+            letter-spacing: 3px;
+        }
+        
+        .menu-subtitle {
+            font-size: 16px;
+            margin-bottom: 40px;
+            color: #CCCCCC;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+        
+        .menu-button {
+            background: linear-gradient(45deg, #FF9900, #FFB84D);
+            color: #232F3E;
+            border: 3px solid #232F3E;
+            padding: 20px 40px;
+            margin: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+        }
+        
+        .menu-button:hover {
+            background: linear-gradient(45deg, #232F3E, #3A4A5C);
+            color: #FF9900;
+            border-color: #FF9900;
+            transform: translateY(-2px);
+        }
+        
+        .difficulty-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .difficulty-card {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #FF9900;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            max-width: 200px;
+        }
+        
+        .difficulty-title {
+            color: #FF9900;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .difficulty-services {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #CCCCCC;
+        }
+        
+        #ui {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            z-index: 999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #FF9900;
+        }
+        
+        .ui-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ui-value {
+            color: #FF9900;
+            font-size: 20px;
+        }
+        
+        .reset-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #FF6B6B;
+            color: white;
+            border: 2px solid #232F3E;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1001;
+        }
+        
+        .reset-button:hover {
+            background: #FF5252;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        #phaser-game {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="menu">
+            <h1 class="menu-title">AWS MEMORY GAME</h1>
+            <p class="menu-subtitle">
+                Pon a prueba tu conocimiento de los servicios de AWS en este divertido juego de memoria. 
+                Encuentra los pares de servicios antes de que se acabe el tiempo.
+            </p>
+            
+            <div class="difficulty-info">
+                <div class="difficulty-card">
+                    <div class="difficulty-title">FÁCIL</div>
+                    <div class="difficulty-services">
+                        • S3 - Simple Storage<br>
+                        • Lambda - Functions<br>
+                        • EC2 - Virtual Servers<br>
+                        • RDS - Databases
+                    </div>
+                </div>
+                
+                <div class="difficulty-card">
+                    <div class="difficulty-title">DIFÍCIL</div>
+                    <div class="difficulty-services">
+                        • EKS - Kubernetes<br>
+                        • SageMaker - ML Platform<br>
+                        • Kinesis - Data Streaming<br>
+                        • Redshift - Data Warehouse
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <button class="menu-button" onclick="startGame('easy')">Nivel Fácil</button>
+                <button class="menu-button" onclick="startGame('hard')">Nivel Difícil</button>
+            </div>
+        </div>
+        
+        <div id="ui" class="hidden">
+            <div class="ui-item">
+                <span>⏱️ Tiempo:</span>
+                <span class="ui-value"><span id="timer">30</span>s</span>
+            </div>
+            <div class="ui-item">
+                <span>🎯 Pares:</span>
+                <span class="ui-value"><span id="pairs">0</span>/4</span>
+            </div>
+            <div class="ui-item">
+                <span>📊 Nivel:</span>
+                <span class="ui-value" id="level">FÁCIL</span>
+            </div>
+        </div>
+        
+        <button id="reset-btn" class="reset-button hidden" onclick="resetToMenu()">🔄 Reiniciar</button>
+        
+        <div id="phaser-game"></div>
+    </div>
+
+    <script src="public/lib/phaser.min.js"></script>
+    <script>
+        // Variables globales del juego
+        let game = null;
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let totalPairs = 4;
+        let timeLeft = 30;
+        let gameActive = false;
+        let currentLevel = 'easy';
+        let gameTimer = null;
+
+        // Servicios AWS por dificultad
+        const awsServices = {
+            easy: [
+                { name: 'S3', color: '#FF9900', description: 'Simple Storage Service' },
+                { name: 'Lambda', color: '#FF9900', description: 'Serverless Functions' },
+                { name: 'EC2', color: '#FF9900', description: 'Virtual Servers' },
+                { name: 'RDS', color: '#FF9900', description: 'Managed Database' }
+            ],
+            hard: [
+                { name: 'EKS', color: '#FF9900', description: 'Kubernetes Service' },
+                { name: 'SageMaker', color: '#FF9900', description: 'Machine Learning' },
+                { name: 'Kinesis', color: '#FF9900', description: 'Data Streaming' },
+                { name: 'Redshift', color: '#FF9900', description: 'Data Warehouse' }
+            ]
+        };
+
+        // Configuración del juego Phaser
+        const gameConfig = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            parent: 'phaser-game',
+            backgroundColor: '#1a1a2e',
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        function preload() {
+            console.log('Preload iniciado');
+            createCardTextures.call(this);
+        }
+
+        function create() {
+            console.log('Create iniciado');
+            
+            // Título del juego
+            this.add.text(400, 80, 'AWS MEMORY GAME', {
+                fontSize: '28px',
+                fill: '#FF9900',
+                fontFamily: 'monospace'
+            }).setOrigin(0.5);
+            
+            setupCards.call(this);
+            console.log('Juego creado exitosamente');
+        }
+
+        function update() {
+            // Lógica de actualización
+        }
+
+        function createCardTextures() {
+            const graphics = this.add.graphics();
+            
+            // Crear textura para carta volteada (reverso)
+            graphics.fillStyle(0x232F3E);
+            graphics.fillRoundedRect(0, 0, 120, 160, 10);
+            graphics.lineStyle(4, 0xFF9900);
+            graphics.strokeRoundedRect(2, 2, 116, 156, 10);
+            
+            // Patrón AWS
+            graphics.fillStyle(0xFF9900);
+            graphics.fillRect(20, 70, 80, 4);
+            graphics.fillRect(20, 80, 80, 4);
+            graphics.fillRect(20, 90, 80, 4);
+            
+            graphics.generateTexture('card-back', 120, 160);
+            graphics.clear();
+            
+            // Crear texturas para servicios
+            const services = [...awsServices.easy, ...awsServices.hard];
+            services.forEach(service => {
+                try {
+                    graphics.fillStyle(0xFFFFFF);
+                    graphics.fillRoundedRect(0, 0, 120, 160, 10);
+                    graphics.lineStyle(4, 0xFF9900);
+                    graphics.strokeRoundedRect(2, 2, 116, 156, 10);
+                    
+                    // Área del icono
+                    graphics.fillStyle(0xFF9900);
+                    graphics.fillRoundedRect(10, 10, 100, 80, 5);
+                    
+                    // Dibujar icono del servicio
+                    drawServiceIcon(graphics, service.name, 60, 50);
+                    
+                    // Área del texto
+                    graphics.fillStyle(0x232F3E);
+                    graphics.fillRoundedRect(10, 100, 100, 50, 5);
+                    
+                    graphics.generateTexture(`card-${service.name.toLowerCase()}`, 120, 160);
+                    graphics.clear();
+                } catch (error) {
+                    console.error(`Error creando textura para ${service.name}:`, error);
+                    // Crear una textura básica sin icono
+                    graphics.fillStyle(0xFFFFFF);
+                    graphics.fillRoundedRect(0, 0, 120, 160, 10);
+                    graphics.lineStyle(4, 0xFF9900);
+                    graphics.strokeRoundedRect(2, 2, 116, 156, 10);
+                    graphics.fillStyle(0xFF9900);
+                    graphics.fillRoundedRect(10, 10, 100, 80, 5);
+                    graphics.fillStyle(0x232F3E);
+                    graphics.fillRoundedRect(10, 100, 100, 50, 5);
+                    graphics.generateTexture(`card-${service.name.toLowerCase()}`, 120, 160);
+                    graphics.clear();
+                }
+            });
+            
+            graphics.destroy();
+        }
+
+        function drawServiceIcon(graphics, serviceName, centerX, centerY) {
+            graphics.fillStyle(0x232F3E);
+            graphics.lineStyle(2, 0x232F3E);
+            
+            try {
+                switch(serviceName.toLowerCase()) {
+                    case 's3':
+                        // Bucket S3 simple
+                        graphics.fillRect(centerX - 15, centerY - 10, 30, 20);
+                        graphics.strokeRect(centerX - 15, centerY - 10, 30, 20);
+                        graphics.fillRect(centerX - 12, centerY - 6, 24, 2);
+                        graphics.fillRect(centerX - 12, centerY - 2, 24, 2);
+                        graphics.fillRect(centerX - 12, centerY + 2, 24, 2);
+                        break;
+                        
+                    case 'lambda':
+                        // Lambda simple
+                        graphics.fillRect(centerX - 12, centerY - 12, 4, 24);
+                        graphics.fillRect(centerX - 8, centerY - 8, 16, 4);
+                        graphics.fillRect(centerX + 8, centerY - 12, 4, 24);
+                        break;
+                        
+                    case 'ec2':
+                        // Servidor simple
+                        graphics.fillRect(centerX - 15, centerY - 12, 30, 24);
+                        graphics.strokeRect(centerX - 15, centerY - 12, 30, 24);
+                        graphics.fillCircle(centerX - 8, centerY - 6, 2);
+                        graphics.fillCircle(centerX, centerY - 6, 2);
+                        graphics.fillCircle(centerX + 8, centerY - 6, 2);
+                        break;
+                        
+                    case 'rds':
+                        // Base de datos simple
+                        graphics.fillRect(centerX - 12, centerY - 8, 24, 16);
+                        graphics.strokeRect(centerX - 12, centerY - 8, 24, 16);
+                        graphics.fillRect(centerX - 10, centerY - 4, 20, 2);
+                        graphics.fillRect(centerX - 10, centerY, 20, 2);
+                        graphics.fillRect(centerX - 10, centerY + 4, 20, 2);
+                        break;
+                        
+                    case 'eks':
+                        // Kubernetes simple
+                        graphics.strokeCircle(centerX, centerY, 12);
+                        graphics.fillRect(centerX - 1, centerY - 12, 2, 24);
+                        graphics.fillRect(centerX - 12, centerY - 1, 24, 2);
+                        graphics.fillCircle(centerX, centerY, 3);
+                        break;
+                        
+                    case 'sagemaker':
+                        // ML simple
+                        graphics.strokeCircle(centerX, centerY, 10);
+                        graphics.fillRect(centerX - 8, centerY - 2, 16, 4);
+                        graphics.fillCircle(centerX - 6, centerY, 2);
+                        graphics.fillCircle(centerX + 6, centerY, 2);
+                        break;
+                        
+                    case 'kinesis':
+                        // Stream simple
+                        graphics.fillRect(centerX - 15, centerY - 6, 30, 4);
+                        graphics.fillRect(centerX - 15, centerY - 2, 30, 4);
+                        graphics.fillRect(centerX - 15, centerY + 2, 30, 4);
+                        // Flechas
+                        graphics.fillRect(centerX + 10, centerY - 4, 4, 8);
+                        break;
+                        
+                    case 'redshift':
+                        // Data warehouse simple
+                        graphics.fillRect(centerX - 15, centerY - 10, 30, 5);
+                        graphics.fillRect(centerX - 15, centerY - 2, 30, 5);
+                        graphics.fillRect(centerX - 15, centerY + 6, 30, 5);
+                        graphics.strokeRect(centerX - 15, centerY - 10, 30, 5);
+                        graphics.strokeRect(centerX - 15, centerY - 2, 30, 5);
+                        graphics.strokeRect(centerX - 15, centerY + 6, 30, 5);
+                        break;
+                        
+                    default:
+                        // Icono por defecto
+                        graphics.fillRect(centerX - 10, centerY - 10, 20, 20);
+                        graphics.strokeRect(centerX - 10, centerY - 10, 20, 20);
+                        break;
+                }
+            } catch (error) {
+                console.error(`Error dibujando icono para ${serviceName}:`, error);
+                // Icono de fallback
+                graphics.fillRect(centerX - 8, centerY - 8, 16, 16);
+            }
+        }
+
+        function setupCards() {
+            const services = awsServices[currentLevel];
+            const cardData = [];
+            
+            // Crear pares
+            services.forEach(service => {
+                cardData.push(service, service);
+            });
+            
+            // Mezclar
+            shuffleArray(cardData);
+            
+            // Posicionar cartas
+            const startX = 160;
+            const startY = 120;
+            const cardWidth = 120;
+            const cardHeight = 160;
+            const spacingX = 40;
+            const spacingY = 30;
+            
+            cards = [];
+            
+            for (let i = 0; i < 8; i++) {
+                const row = Math.floor(i / 4);
+                const col = i % 4;
+                
+                const x = startX + col * (cardWidth + spacingX);
+                const y = startY + row * (cardHeight + spacingY);
+                
+                const card = this.add.sprite(x, y, 'card-back')
+                    .setInteractive()
+                    .setOrigin(0);
+                
+                card.cardData = cardData[i];
+                card.isFlipped = false;
+                card.isMatched = false;
+                
+                card.on('pointerdown', () => flipCard.call(this, card));
+                card.on('pointerover', () => {
+                    if (!card.isFlipped && !card.isMatched && gameActive) {
+                        card.setTint(0xdddddd);
+                    }
+                });
+                card.on('pointerout', () => {
+                    if (!card.isFlipped && !card.isMatched) {
+                        card.clearTint();
+                    }
+                });
+                
+                cards.push(card);
+            }
+        }
+
+        function flipCard(card) {
+            if (!gameActive || card.isFlipped || card.isMatched || flippedCards.length >= 2) {
+                return;
+            }
+            
+            card.isFlipped = true;
+            card.setTexture(`card-${card.cardData.name.toLowerCase()}`);
+            flippedCards.push(card);
+            
+            // Agregar texto
+            const text = this.add.text(card.x + 60, card.y + 130, card.cardData.name, {
+                fontSize: '12px',
+                fill: '#FFFFFF',
+                fontFamily: 'monospace',
+                fontWeight: 'bold'
+            }).setOrigin(0.5);
+            
+            card.serviceText = text;
+            
+            if (flippedCards.length === 2) {
+                this.time.delayedCall(1000, () => checkMatch.call(this));
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.cardData.name === card2.cardData.name) {
+                // Match!
+                card1.isMatched = true;
+                card2.isMatched = true;
+                card1.setTint(0x90EE90);
+                card2.setTint(0x90EE90);
+                
+                matchedPairs++;
+                document.getElementById('pairs').textContent = matchedPairs;
+                
+                if (matchedPairs === totalPairs) {
+                    gameWon.call(this);
+                }
+            } else {
+                // No match
+                card1.isFlipped = false;
+                card2.isFlipped = false;
+                card1.setTexture('card-back');
+                card2.setTexture('card-back');
+                
+                if (card1.serviceText) card1.serviceText.destroy();
+                if (card2.serviceText) card2.serviceText.destroy();
+            }
+            
+            flippedCards = [];
+        }
+
+        function gameWon() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
+            this.add.text(400, 250, '¡GANASTE!', {
+                fontSize: '48px',
+                fill: '#90EE90',
+                fontFamily: 'monospace'
+            }).setOrigin(0.5);
+            
+            this.add.text(400, 320, `Tiempo restante: ${timeLeft}s`, {
+                fontSize: '20px',
+                fill: '#FFFFFF',
+                fontFamily: 'monospace'
+            }).setOrigin(0.5);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
+            this.add.text(400, 250, 'TIEMPO AGOTADO', {
+                fontSize: '40px',
+                fill: '#FF6B6B',
+                fontFamily: 'monospace'
+            }).setOrigin(0.5);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startTimer() {
+            gameActive = true;
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    gameOver.call(game.scene.scenes[0]);
+                }
+            }, 1000);
+        }
+
+        // Funciones del menú
+        function startGame(level) {
+            console.log('Iniciando juego:', level);
+            
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('ui').classList.remove('hidden');
+            document.getElementById('reset-btn').classList.remove('hidden');
+            
+            currentLevel = level;
+            timeLeft = 30;
+            matchedPairs = 0;
+            flippedCards = [];
+            
+            document.getElementById('level').textContent = level.toUpperCase();
+            document.getElementById('timer').textContent = '30';
+            document.getElementById('pairs').textContent = '0';
+            
+            if (game) {
+                game.destroy(true);
+            }
+            
+            game = new Phaser.Game(gameConfig);
+            
+            setTimeout(() => {
+                startTimer();
+            }, 1000);
+        }
+
+        function resetToMenu() {
+            if (gameTimer) clearInterval(gameTimer);
+            if (game) {
+                game.destroy(true);
+                game = null;
+            }
+            
+            cards = [];
+            flippedCards = [];
+            matchedPairs = 0;
+            timeLeft = 30;
+            gameActive = false;
+            
+            document.getElementById('menu').classList.remove('hidden');
+            document.getElementById('ui').classList.add('hidden');
+            document.getElementById('reset-btn').classList.add('hidden');
+        }
+
+        // Inicialización
+        window.addEventListener('load', () => {
+            console.log('AWS Memory Game cargado');
+            console.log('Phaser disponible:', typeof Phaser !== 'undefined');
+            
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    resetToMenu();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
