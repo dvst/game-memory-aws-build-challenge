@@ -1167,11 +1167,22 @@
                 startX = spacingX;
                 startY = 120 + spacingY;
             } else {
+                // Para 8 cartas (2×4) - Distribución equitativa mejorada
                 cardScale = 1.0;
-                spacingX = 40;
-                spacingY = 30;
-                startX = 160;
-                startY = 120;
+                const scaledCardWidth = 120 * cardScale;
+                const scaledCardHeight = 160 * cardScale;
+                
+                // Calcular espaciado uniforme para modo fácil
+                const totalCardsWidth = cols * scaledCardWidth;
+                const availableSpaceX = 800 - totalCardsWidth;
+                spacingX = availableSpaceX / (cols + 1); // +1 para incluir bordes
+                
+                const totalCardsHeight = 2 * scaledCardHeight; // 2 filas
+                const availableSpaceY = 600 - totalCardsHeight - 120; // -120 para UI superior
+                spacingY = availableSpaceY / (2 + 1); // +1 para incluir bordes
+                
+                startX = spacingX;
+                startY = 120 + spacingY; // 120 para dejar espacio al UI
             }
             
             cards = [];
