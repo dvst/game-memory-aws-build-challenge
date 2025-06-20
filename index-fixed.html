@@ -393,17 +393,14 @@
         function createCardTextures() {
             const graphics = this.add.graphics();
             
-            // Crear textura para carta volteada (reverso)
+            // Crear textura para carta volteada (reverso) con logo AWS pixelado
             graphics.fillStyle(0x232F3E);
             graphics.fillRoundedRect(0, 0, 120, 160, 10);
             graphics.lineStyle(4, 0xFF9900);
             graphics.strokeRoundedRect(2, 2, 116, 156, 10);
             
-            // Patrón AWS
-            graphics.fillStyle(0xFF9900);
-            graphics.fillRect(20, 70, 80, 4);
-            graphics.fillRect(20, 80, 80, 4);
-            graphics.fillRect(20, 90, 80, 4);
+            // Dibujar logo AWS en estilo pixelado
+            drawPixelatedAWSLogo(graphics, 60, 80);
             
             graphics.generateTexture('card-back', 120, 160);
             graphics.clear();
@@ -448,6 +445,96 @@
             });
             
             graphics.destroy();
+        }
+
+        function drawPixelatedAWSLogo(graphics, centerX, centerY) {
+            // Configurar para dibujo pixelado
+            graphics.fillStyle(0xFF9900);
+            
+            // Dibujar "AWS" en estilo pixel art
+            const pixelSize = 3;
+            
+            // Letra A (primera)
+            const aPattern = [
+                [0,0,1,1,0,0],
+                [0,1,0,0,1,0],
+                [0,1,0,0,1,0],
+                [0,1,1,1,1,0],
+                [0,1,0,0,1,0],
+                [0,1,0,0,1,0],
+                [0,1,0,0,1,0]
+            ];
+            
+            // Letra W
+            const wPattern = [
+                [1,0,0,0,1],
+                [1,0,0,0,1],
+                [1,0,0,0,1],
+                [1,0,1,0,1],
+                [1,0,1,0,1],
+                [1,1,0,1,1],
+                [1,0,0,0,1]
+            ];
+            
+            // Letra S
+            const sPattern = [
+                [0,1,1,1,0],
+                [1,0,0,0,0],
+                [1,0,0,0,0],
+                [0,1,1,1,0],
+                [0,0,0,0,1],
+                [0,0,0,0,1],
+                [0,1,1,1,0]
+            ];
+            
+            // Dibujar A
+            drawPixelLetter(graphics, aPattern, centerX - 30, centerY - 15, pixelSize);
+            
+            // Dibujar W
+            drawPixelLetter(graphics, wPattern, centerX - 8, centerY - 15, pixelSize);
+            
+            // Dibujar S
+            drawPixelLetter(graphics, sPattern, centerX + 15, centerY - 15, pixelSize);
+            
+            // Dibujar la sonrisa característica de AWS (flecha curva)
+            graphics.fillStyle(0xFF9900);
+            
+            // Flecha curva debajo del texto (simplificada en pixel art)
+            const arrowY = centerY + 20;
+            
+            // Línea principal de la flecha
+            for (let i = 0; i < 8; i++) {
+                graphics.fillRect(centerX - 24 + i * 6, arrowY + Math.sin(i * 0.5) * 3, pixelSize, pixelSize);
+            }
+            
+            // Punta de la flecha
+            graphics.fillRect(centerX + 18, arrowY - 3, pixelSize, pixelSize);
+            graphics.fillRect(centerX + 21, arrowY, pixelSize, pixelSize);
+            graphics.fillRect(centerX + 18, arrowY + 3, pixelSize, pixelSize);
+            
+            // Agregar algunos detalles decorativos pixelados
+            graphics.fillStyle(0xFFB84D); // Color más claro para detalles
+            
+            // Puntos decorativos
+            graphics.fillRect(centerX - 35, centerY - 25, pixelSize, pixelSize);
+            graphics.fillRect(centerX + 35, centerY - 25, pixelSize, pixelSize);
+            graphics.fillRect(centerX - 35, centerY + 25, pixelSize, pixelSize);
+            graphics.fillRect(centerX + 35, centerY + 25, pixelSize, pixelSize);
+        }
+
+        function drawPixelLetter(graphics, pattern, startX, startY, pixelSize) {
+            for (let row = 0; row < pattern.length; row++) {
+                for (let col = 0; col < pattern[row].length; col++) {
+                    if (pattern[row][col] === 1) {
+                        graphics.fillRect(
+                            startX + col * pixelSize,
+                            startY + row * pixelSize,
+                            pixelSize,
+                            pixelSize
+                        );
+                    }
+                }
+            }
         }
 
         function drawServiceIcon(graphics, serviceName, centerX, centerY) {
