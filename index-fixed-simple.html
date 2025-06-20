@@ -42,6 +42,20 @@
             text-align: center;
         }
         
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #FF9900;
+            color: #232F3E;
+            border: 2px solid #232F3E;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
         .menu-title {
             font-size: 48px;
             margin-bottom: 20px;
@@ -140,20 +154,25 @@
 <body>
     <div id="game-container">
         <div id="menu">
-            <h1 class="menu-title">AWS MEMORY GAME</h1>
+            <select id="language-selector" class="language-selector" onchange="changeLanguage()">
+                <option value="es">🇪🇸 Español</option>
+                <option value="en">🇺🇸 English</option>
+            </select>
+            
+            <h1 class="menu-title" id="game-title">AWS MEMORY GAME</h1>
             <div>
-                <button class="menu-button" onclick="startGame('easy')">Nivel Fácil</button>
-                <button class="menu-button" onclick="startGame('hard')">Nivel Difícil</button>
+                <button class="menu-button" id="easy-button" onclick="startGame('easy')">Nivel Fácil</button>
+                <button class="menu-button" id="hard-button" onclick="startGame('hard')">Nivel Difícil</button>
             </div>
         </div>
         
         <div id="ui" class="hidden">
-            <div>⏱️ Tiempo: <span class="ui-value"><span id="timer">30</span>s</span></div>
-            <div>🎯 Pares: <span class="ui-value"><span id="pairs">0/4</span></span></div>
-            <div>📊 Nivel: <span class="ui-value" id="level">FÁCIL</span></div>
+            <div><span id="time-label">⏱️ Tiempo:</span> <span class="ui-value"><span id="timer">30</span><span id="seconds-label">s</span></span></div>
+            <div><span id="pairs-label">🎯 Pares:</span> <span class="ui-value"><span id="pairs">0/4</span></span></div>
+            <div><span id="level-label">📊 Nivel:</span> <span class="ui-value" id="level">FÁCIL</span></div>
         </div>
         
-        <button id="reset-btn" class="reset-button hidden" onclick="resetToMenu()">🔄 Volver al Menú</button>
+        <button id="reset-btn" class="reset-button hidden" onclick="resetToMenu()">🔄 <span id="reset-text">Volver al Menú</span></button>
         
         <div id="phaser-game"></div>
     </div>
@@ -170,6 +189,81 @@
         let gameActive = false;
         let currentLevel = 'easy';
         let gameTimer = null;
+        let currentLanguage = 'es'; // Idioma por defecto: español
+
+        // Sistema de traducciones
+        const translations = {
+            es: {
+                title: 'AWS MEMORY GAME',
+                easyButton: 'Nivel Fácil',
+                hardButton: 'Nivel Difícil',
+                timeLabel: '⏱️ Tiempo:',
+                pairsLabel: '🎯 Pares:',
+                levelLabel: '📊 Nivel:',
+                resetButton: 'Volver al Menú',
+                seconds: 's',
+                easy: 'FÁCIL',
+                hard: 'DIFÍCIL',
+                won: '¡GANASTE!',
+                timeUp: 'TIEMPO AGOTADO',
+                timeRemaining: 'Tiempo restante:',
+                pairsFound: 'Pares encontrados:',
+                services: {
+                    easy: [
+                        { name: 'S3', description: 'Almacenamiento Simple' },
+                        { name: 'Lambda', description: 'Funciones Serverless' },
+                        { name: 'EC2', description: 'Servidores Virtuales' },
+                        { name: 'RDS', description: 'Base de Datos' }
+                    ],
+                    hard: [
+                        { name: 'EKS', description: 'Servicio Kubernetes' },
+                        { name: 'SageMaker', description: 'Machine Learning' },
+                        { name: 'Kinesis', description: 'Streaming de Datos' },
+                        { name: 'Redshift', description: 'Data Warehouse' },
+                        { name: 'CloudFormation', description: 'Infraestructura como Código' },
+                        { name: 'ElastiCache', description: 'Cache en Memoria' },
+                        { name: 'SNS', description: 'Servicio de Notificaciones' },
+                        { name: 'SQS', description: 'Cola de Mensajes' },
+                        { name: 'DynamoDB', description: 'Base de Datos NoSQL' }
+                    ]
+                }
+            },
+            en: {
+                title: 'AWS MEMORY GAME',
+                easyButton: 'Easy Level',
+                hardButton: 'Hard Level',
+                timeLabel: '⏱️ Time:',
+                pairsLabel: '🎯 Pairs:',
+                levelLabel: '📊 Level:',
+                resetButton: 'Back to Menu',
+                seconds: 's',
+                easy: 'EASY',
+                hard: 'HARD',
+                won: 'YOU WON!',
+                timeUp: 'TIME\'S UP!',
+                timeRemaining: 'Time remaining:',
+                pairsFound: 'Pairs found:',
+                services: {
+                    easy: [
+                        { name: 'S3', description: 'Simple Storage Service' },
+                        { name: 'Lambda', description: 'Serverless Functions' },
+                        { name: 'EC2', description: 'Virtual Servers' },
+                        { name: 'RDS', description: 'Managed Database' }
+                    ],
+                    hard: [
+                        { name: 'EKS', description: 'Kubernetes Service' },
+                        { name: 'SageMaker', description: 'Machine Learning' },
+                        { name: 'Kinesis', description: 'Data Streaming' },
+                        { name: 'Redshift', description: 'Data Warehouse' },
+                        { name: 'CloudFormation', description: 'Infrastructure as Code' },
+                        { name: 'ElastiCache', description: 'In-Memory Cache' },
+                        { name: 'SNS', description: 'Notification Service' },
+                        { name: 'SQS', description: 'Message Queue' },
+                        { name: 'DynamoDB', description: 'NoSQL Database' }
+                    ]
+                }
+            }
+        };
 
         // Colores oficiales de AWS para cada servicio
         const awsServiceColors = {
@@ -189,26 +283,22 @@
             cloudwatch: '#ff9900'   // Naranja - Management Tools
         };
 
-        // Servicios AWS por dificultad
-        const awsServices = {
-            easy: [
-                { name: 'S3', color: '#5a9d2e', description: 'Simple Storage Service' },
-                { name: 'Lambda', color: '#ff9900', description: 'Serverless Functions' },
-                { name: 'EC2', color: '#ff9900', description: 'Virtual Servers' },
-                { name: 'RDS', color: '#3841c5', description: 'Managed Database' }
-            ],
-            hard: [
-                { name: 'EKS', color: '#ff9900', description: 'Kubernetes Service' },
-                { name: 'SageMaker', color: '#8c4fff', description: 'Machine Learning' },
-                { name: 'Kinesis', color: '#8c4fff', description: 'Data Streaming' },
-                { name: 'Redshift', color: '#8c4fff', description: 'Data Warehouse' },
-                { name: 'CloudFormation', color: '#ff9900', description: 'Infrastructure as Code' },
-                { name: 'ElastiCache', color: '#3841c5', description: 'In-Memory Cache' },
-                { name: 'SNS', color: '#ff4b4b', description: 'Notification Service' },
-                { name: 'SQS', color: '#ff4b4b', description: 'Message Queue' },
-                { name: 'DynamoDB', color: '#3841c5', description: 'NoSQL Database' }
-            ]
-        };
+        // Servicios AWS por dificultad (usando traducciones)
+        function getAWSServices() {
+            const t = translations[currentLanguage];
+            return {
+                easy: t.services.easy.map(service => ({
+                    name: service.name,
+                    color: awsServiceColors[service.name.toLowerCase()],
+                    description: service.description
+                })),
+                hard: t.services.hard.map(service => ({
+                    name: service.name,
+                    color: awsServiceColors[service.name.toLowerCase()],
+                    description: service.description
+                }))
+            };
+        }
 
         // Configuración del juego Phaser
         const gameConfig = {
@@ -421,6 +511,7 @@
         }
 
         function setupCards() {
+            const awsServices = getAWSServices(); // Obtener servicios traducidos
             const services = awsServices[currentLevel];
             const cardData = [];
             
@@ -552,14 +643,16 @@
             gameActive = false;
             clearInterval(gameTimer);
             
+            const t = translations[currentLanguage];
+            
             this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
-            this.add.text(400, 250, '¡GANASTE!', {
+            this.add.text(400, 250, t.won, {
                 fontSize: '48px',
                 fill: '#90EE90',
                 fontFamily: 'monospace'
             }).setOrigin(0.5);
             
-            this.add.text(400, 320, `Tiempo restante: ${timeLeft}s`, {
+            this.add.text(400, 320, `${t.timeRemaining} ${timeLeft}${t.seconds}`, {
                 fontSize: '20px',
                 fill: '#FFFFFF',
                 fontFamily: 'monospace'
@@ -570,10 +663,18 @@
             gameActive = false;
             clearInterval(gameTimer);
             
+            const t = translations[currentLanguage];
+            
             this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
-            this.add.text(400, 250, 'TIEMPO AGOTADO', {
+            this.add.text(400, 250, t.timeUp, {
                 fontSize: '40px',
                 fill: '#FF6B6B',
+                fontFamily: 'monospace'
+            }).setOrigin(0.5);
+            
+            this.add.text(400, 320, `${t.pairsFound} ${matchedPairs}/${totalPairs}`, {
+                fontSize: '20px',
+                fill: '#FFFFFF',
                 fontFamily: 'monospace'
             }).setOrigin(0.5);
         }
@@ -597,6 +698,38 @@
             }, 1000);
         }
 
+        // Función para cambiar idioma
+        function changeLanguage() {
+            const selector = document.getElementById('language-selector');
+            currentLanguage = selector.value;
+            updateUI();
+        }
+
+        // Función para actualizar toda la interfaz con el idioma seleccionado
+        function updateUI() {
+            const t = translations[currentLanguage];
+            
+            // Actualizar menú principal
+            document.getElementById('game-title').textContent = t.title;
+            document.getElementById('easy-button').textContent = t.easyButton;
+            document.getElementById('hard-button').textContent = t.hardButton;
+            
+            // Actualizar UI del juego
+            document.getElementById('time-label').textContent = t.timeLabel;
+            document.getElementById('pairs-label').textContent = t.pairsLabel;
+            document.getElementById('level-label').textContent = t.levelLabel;
+            document.getElementById('seconds-label').textContent = t.seconds;
+            document.getElementById('reset-text').textContent = t.resetButton;
+            
+            // Actualizar nivel actual si está en juego
+            if (!document.getElementById('menu').classList.contains('hidden')) {
+                return; // Solo actualizar si no estamos en el menú
+            }
+            
+            const levelText = currentLevel === 'easy' ? t.easy : t.hard;
+            document.getElementById('level').textContent = levelText;
+        }
+
         // Funciones del menú
         function startGame(level) {
             console.log('Iniciando juego:', level);
@@ -618,7 +751,9 @@
             matchedPairs = 0;
             flippedCards = [];
             
-            document.getElementById('level').textContent = level.toUpperCase();
+            const t = translations[currentLanguage];
+            const levelText = level === 'easy' ? t.easy : t.hard;
+            document.getElementById('level').textContent = levelText;
             document.getElementById('timer').textContent = timeLeft;
             document.getElementById('pairs').textContent = `0/${totalPairs}`;
             
@@ -659,6 +794,9 @@
         window.addEventListener('load', () => {
             console.log('AWS Memory Game cargado');
             console.log('Phaser disponible:', typeof Phaser !== 'undefined');
+            
+            // Inicializar interfaz con idioma por defecto
+            updateUI();
             
             // Agregar listener para tecla ESC
             document.addEventListener('keydown', (event) => {
