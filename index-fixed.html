@@ -182,7 +182,8 @@
                         • S3 - Simple Storage<br>
                         • Lambda - Functions<br>
                         • EC2 - Virtual Servers<br>
-                        • RDS - Databases
+                        • RDS - Databases<br>
+                        <strong>8 cartas - 30 segundos</strong>
                     </div>
                 </div>
                 
@@ -192,7 +193,12 @@
                         • EKS - Kubernetes<br>
                         • SageMaker - ML Platform<br>
                         • Kinesis - Data Streaming<br>
-                        • Redshift - Data Warehouse
+                        • Redshift - Data Warehouse<br>
+                        • CloudFormation - IaC<br>
+                        • ElastiCache - Cache<br>
+                        • SNS - Notifications<br>
+                        • SQS - Message Queue<br>
+                        <strong>16 cartas - 60 segundos</strong>
                     </div>
                 </div>
             </div>
@@ -210,7 +216,7 @@
             </div>
             <div class="ui-item">
                 <span>🎯 Pares:</span>
-                <span class="ui-value"><span id="pairs">0</span>/4</span>
+                <span class="ui-value"><span id="pairs">0/4</span></span>
             </div>
             <div class="ui-item">
                 <span>📊 Nivel:</span>
@@ -230,7 +236,7 @@
         let cards = [];
         let flippedCards = [];
         let matchedPairs = 0;
-        let totalPairs = 4;
+        let totalPairs = 4; // Se actualizará según el nivel
         let timeLeft = 30;
         let gameActive = false;
         let currentLevel = 'easy';
@@ -248,7 +254,11 @@
                 { name: 'EKS', color: '#FF9900', description: 'Kubernetes Service' },
                 { name: 'SageMaker', color: '#FF9900', description: 'Machine Learning' },
                 { name: 'Kinesis', color: '#FF9900', description: 'Data Streaming' },
-                { name: 'Redshift', color: '#FF9900', description: 'Data Warehouse' }
+                { name: 'Redshift', color: '#FF9900', description: 'Data Warehouse' },
+                { name: 'CloudFormation', color: '#FF9900', description: 'Infrastructure as Code' },
+                { name: 'ElastiCache', color: '#FF9900', description: 'In-Memory Cache' },
+                { name: 'SNS', color: '#FF9900', description: 'Notification Service' },
+                { name: 'SQS', color: '#FF9900', description: 'Message Queue' }
             ]
         };
 
@@ -423,6 +433,50 @@
                         graphics.strokeRect(centerX - 15, centerY + 6, 30, 5);
                         break;
                         
+                    case 'cloudformation':
+                        // CloudFormation - Stack de recursos
+                        graphics.fillRect(centerX - 12, centerY - 8, 24, 4);
+                        graphics.fillRect(centerX - 10, centerY - 4, 20, 4);
+                        graphics.fillRect(centerX - 8, centerY, 16, 4);
+                        graphics.fillRect(centerX - 6, centerY + 4, 12, 4);
+                        graphics.strokeRect(centerX - 12, centerY - 8, 24, 4);
+                        graphics.strokeRect(centerX - 10, centerY - 4, 20, 4);
+                        graphics.strokeRect(centerX - 8, centerY, 16, 4);
+                        graphics.strokeRect(centerX - 6, centerY + 4, 12, 4);
+                        break;
+                        
+                    case 'elasticache':
+                        // ElastiCache - Cache en memoria
+                        graphics.strokeCircle(centerX, centerY, 12);
+                        graphics.fillCircle(centerX - 6, centerY - 3, 2);
+                        graphics.fillCircle(centerX + 6, centerY - 3, 2);
+                        graphics.fillCircle(centerX, centerY + 6, 2);
+                        graphics.fillRect(centerX - 8, centerY - 1, 16, 2);
+                        break;
+                        
+                    case 'sns':
+                        // SNS - Notification Service
+                        graphics.strokeCircle(centerX, centerY, 10);
+                        graphics.fillRect(centerX - 2, centerY - 6, 4, 12);
+                        graphics.fillRect(centerX - 6, centerY - 2, 12, 4);
+                        // Ondas de notificación
+                        graphics.strokeCircle(centerX, centerY, 14);
+                        graphics.strokeCircle(centerX, centerY, 18);
+                        break;
+                        
+                    case 'sqs':
+                        // SQS - Message Queue
+                        graphics.fillRect(centerX - 15, centerY - 8, 30, 4);
+                        graphics.fillRect(centerX - 15, centerY - 2, 30, 4);
+                        graphics.fillRect(centerX - 15, centerY + 4, 30, 4);
+                        graphics.strokeRect(centerX - 15, centerY - 8, 30, 4);
+                        graphics.strokeRect(centerX - 15, centerY - 2, 30, 4);
+                        graphics.strokeRect(centerX - 15, centerY + 4, 30, 4);
+                        // Flecha indicando flujo
+                        graphics.fillRect(centerX + 12, centerY - 4, 2, 8);
+                        graphics.fillRect(centerX + 10, centerY - 2, 6, 4);
+                        break;
+                        
                     default:
                         // Icono por defecto
                         graphics.fillRect(centerX - 10, centerY - 10, 20, 20);
@@ -448,26 +502,34 @@
             // Mezclar
             shuffleArray(cardData);
             
-            // Posicionar cartas
-            const startX = 160;
-            const startY = 120;
+            // Configuración según el nivel
+            const isHardMode = currentLevel === 'hard';
+            const totalCards = isHardMode ? 16 : 8;
+            const cols = isHardMode ? 4 : 4;
+            const rows = isHardMode ? 4 : 2;
+            
+            // Ajustar posicionamiento para que quepan todas las cartas
+            const startX = isHardMode ? 80 : 160;
+            const startY = isHardMode ? 90 : 120;
             const cardWidth = 120;
             const cardHeight = 160;
-            const spacingX = 40;
-            const spacingY = 30;
+            const spacingX = isHardMode ? 15 : 40;
+            const spacingY = isHardMode ? 15 : 30;
+            const cardScale = isHardMode ? 0.7 : 1.0;
             
             cards = [];
             
-            for (let i = 0; i < 8; i++) {
-                const row = Math.floor(i / 4);
-                const col = i % 4;
+            for (let i = 0; i < totalCards; i++) {
+                const row = Math.floor(i / cols);
+                const col = i % cols;
                 
-                const x = startX + col * (cardWidth + spacingX);
-                const y = startY + row * (cardHeight + spacingY);
+                const x = startX + col * (cardWidth * cardScale + spacingX);
+                const y = startY + row * (cardHeight * cardScale + spacingY);
                 
                 const card = this.add.sprite(x, y, 'card-back')
                     .setInteractive()
-                    .setOrigin(0);
+                    .setOrigin(0)
+                    .setScale(cardScale);
                 
                 card.cardData = cardData[i];
                 card.isFlipped = false;
@@ -498,9 +560,15 @@
             card.setTexture(`card-${card.cardData.name.toLowerCase()}`);
             flippedCards.push(card);
             
+            // Calcular posición del texto considerando la escala de la carta
+            const cardScale = card.scaleX;
+            const textX = card.x + (60 * cardScale);
+            const textY = card.y + (130 * cardScale);
+            const fontSize = currentLevel === 'hard' ? '10px' : '12px';
+            
             // Agregar texto
-            const text = this.add.text(card.x + 60, card.y + 130, card.cardData.name, {
-                fontSize: '12px',
+            const text = this.add.text(textX, textY, card.cardData.name, {
+                fontSize: fontSize,
                 fill: '#FFFFFF',
                 fontFamily: 'monospace',
                 fontWeight: 'bold'
@@ -524,7 +592,7 @@
                 card2.setTint(0x90EE90);
                 
                 matchedPairs++;
-                document.getElementById('pairs').textContent = matchedPairs;
+                document.getElementById('pairs').textContent = `${matchedPairs}/${totalPairs}`;
                 
                 if (matchedPairs === totalPairs) {
                     gameWon.call(this);
@@ -601,13 +669,22 @@
             document.getElementById('reset-btn').classList.remove('hidden');
             
             currentLevel = level;
-            timeLeft = 30;
+            
+            // Configurar según el nivel
+            if (level === 'hard') {
+                totalPairs = 8;
+                timeLeft = 60; // Más tiempo para el modo difícil
+            } else {
+                totalPairs = 4;
+                timeLeft = 30;
+            }
+            
             matchedPairs = 0;
             flippedCards = [];
             
             document.getElementById('level').textContent = level.toUpperCase();
-            document.getElementById('timer').textContent = '30';
-            document.getElementById('pairs').textContent = '0';
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('pairs').textContent = `0/${totalPairs}`;
             
             if (game) {
                 game.destroy(true);
