@@ -56,6 +56,33 @@
             cursor: pointer;
         }
         
+        .sound-toggle {
+            position: absolute;
+            top: 20px;
+            right: 180px;
+            background: #FF9900;
+            color: #232F3E;
+            border: 2px solid #232F3E;
+            padding: 8px 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .sound-toggle:hover {
+            background: #FFB84D;
+            transform: translateY(-1px);
+        }
+        
+        .sound-toggle.muted {
+            background: #666;
+            color: #ccc;
+        }
+        
         .menu-title {
             font-size: 48px;
             margin-bottom: 20px;
@@ -154,6 +181,10 @@
 <body>
     <div id="game-container">
         <div id="menu">
+            <button id="sound-toggle" class="sound-toggle" onclick="toggleSound()">
+                🔊 <span id="sound-text">Sonido ON</span>
+            </button>
+            
             <select id="language-selector" class="language-selector" onchange="changeLanguage()">
                 <option value="es">🇪🇸 Español</option>
                 <option value="en">🇺🇸 English</option>
@@ -190,6 +221,12 @@
         let currentLevel = 'easy';
         let gameTimer = null;
         let currentLanguage = 'es'; // Idioma por defecto: español
+        
+        // Variables de audio
+        let audioContext = null;
+        let backgroundMusic = null;
+        let soundEnabled = true;
+        let musicGainNode = null;
 
         // Sistema de traducciones
         const translations = {
@@ -201,6 +238,8 @@
                 pairsLabel: '🎯 Pares:',
                 levelLabel: '📊 Nivel:',
                 resetButton: 'Volver al Menú',
+                soundOn: 'Sonido ON',
+                soundOff: 'Sonido OFF',
                 seconds: 's',
                 easy: 'FÁCIL',
                 hard: 'DIFÍCIL',
@@ -236,6 +275,8 @@
                 pairsLabel: '🎯 Pairs:',
                 levelLabel: '📊 Level:',
                 resetButton: 'Back to Menu',
+                soundOn: 'Sound ON',
+                soundOff: 'Sound OFF',
                 seconds: 's',
                 easy: 'EASY',
                 hard: 'HARD',
@@ -265,7 +306,203 @@
             }
         };
 
-        // Colores oficiales de AWS para cada servicio
+        // Sistema de audio 8-bits
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                musicGainNode = audioContext.createGain();
+                musicGainNode.connect(audioContext.destination);
+                musicGainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                
+                console.log('Audio inicializado correctamente');
+            } catch (error) {
+                console.log('Error inicializando audio:', error);
+                soundEnabled = false;
+            }
+        }
+
+        // Crear música de fondo estilo 8-bits (melodía relajante)
+        function createBackgroundMusic() {
+            if (!audioContext || !soundEnabled) return;
+
+            // Melodía principal (notas en Hz)
+            const melody = [
+                { freq: 523.25, duration: 0.5 }, // C5
+                { freq: 587.33, duration: 0.5 }, // D5
+                { freq: 659.25, duration: 0.5 }, // E5
+                { freq: 698.46, duration: 0.5 }, // F5
+                { freq: 783.99, duration: 1.0 }, // G5
+                { freq: 659.25, duration: 0.5 }, // E5
+                { freq: 523.25, duration: 1.0 }, // C5
+                { freq: 587.33, duration: 0.5 }, // D5
+                { freq: 659.25, duration: 0.5 }, // E5
+                { freq: 523.25, duration: 1.5 }, // C5
+                { freq: 0, duration: 0.5 },      // Pausa
+            ];
+
+            // Armonía (acordes simples)
+            const harmony = [
+                { freq: 261.63, duration: 2.0 }, // C4
+                { freq: 293.66, duration: 2.0 }, // D4
+                { freq: 329.63, duration: 2.0 }, // E4
+                { freq: 261.63, duration: 2.0 }, // C4
+                { freq: 0, duration: 0.5 },      // Pausa
+            ];
+
+            let currentTime = audioContext.currentTime;
+            
+            // Función para tocar una nota
+            function playNote(frequency, startTime, duration, gainValue = 0.1) {
+                if (frequency === 0) return; // Pausa
+                
+                const oscillator = audioContext.createOscillator();
+                const noteGain = audioContext.createGain();
+                
+                oscillator.connect(noteGain);
+                noteGain.connect(musicGainNode);
+                
+                oscillator.frequency.setValueAtTime(frequency, startTime);
+                oscillator.type = 'square'; // Sonido 8-bits
+                
+                // Envelope ADSR para sonido más suave
+                noteGain.gain.setValueAtTime(0, startTime);
+                noteGain.gain.linearRampToValueAtTime(gainValue, startTime + 0.05);
+                noteGain.gain.setValueAtTime(gainValue * 0.8, startTime + duration - 0.1);
+                noteGain.gain.linearRampToValueAtTime(0, startTime + duration);
+                
+                oscillator.start(startTime);
+                oscillator.stop(startTime + duration);
+            }
+
+            // Tocar melodía principal
+            let melodyTime = currentTime;
+            melody.forEach(note => {
+                playNote(note.freq, melodyTime, note.duration, 0.15);
+                melodyTime += note.duration;
+            });
+
+            // Tocar armonía (más suave)
+            let harmonyTime = currentTime;
+            harmony.forEach(note => {
+                playNote(note.freq, harmonyTime, note.duration, 0.08);
+                harmonyTime += note.duration;
+            });
+
+            // Programar la siguiente repetición
+            const totalDuration = melody.reduce((sum, note) => sum + note.duration, 0);
+            setTimeout(() => {
+                if (soundEnabled && audioContext) {
+                    createBackgroundMusic();
+                }
+            }, totalDuration * 1000);
+        }
+
+        // Efectos de sonido para el juego
+        function playFlipSound() {
+            if (!audioContext || !soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.1);
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function playMatchSound() {
+            if (!audioContext || !soundEnabled) return;
+            
+            // Sonido de match (acorde ascendente)
+            const frequencies = [523.25, 659.25, 783.99]; // C-E-G
+            
+            frequencies.forEach((freq, index) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + index * 0.1);
+                oscillator.type = 'square';
+                
+                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime + index * 0.1);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.1 + 0.3);
+                
+                oscillator.start(audioContext.currentTime + index * 0.1);
+                oscillator.stop(audioContext.currentTime + index * 0.1 + 0.3);
+            });
+        }
+
+        function playWinSound() {
+            if (!audioContext || !soundEnabled) return;
+            
+            // Fanfarria de victoria
+            const victoryMelody = [783.99, 880, 987.77, 1046.5]; // G-A-B-C
+            
+            victoryMelody.forEach((freq, index) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + index * 0.2);
+                oscillator.type = 'square';
+                
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime + index * 0.2);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + index * 0.2 + 0.4);
+                
+                oscillator.start(audioContext.currentTime + index * 0.2);
+                oscillator.stop(audioContext.currentTime + index * 0.2 + 0.4);
+            });
+        }
+
+        // Función para alternar sonido
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            
+            const button = document.getElementById('sound-toggle');
+            const text = document.getElementById('sound-text');
+            const t = translations[currentLanguage];
+            
+            if (soundEnabled) {
+                button.classList.remove('muted');
+                button.innerHTML = `🔊 <span id="sound-text">${t.soundOn}</span>`;
+                
+                // Inicializar audio si no está inicializado
+                if (!audioContext) {
+                    initAudio();
+                }
+                
+                // Reanudar contexto de audio si está suspendido
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                
+                // Iniciar música de fondo
+                setTimeout(() => {
+                    createBackgroundMusic();
+                }, 100);
+                
+            } else {
+                button.classList.add('muted');
+                button.innerHTML = `🔇 <span id="sound-text">${t.soundOff}</span>`;
+                
+                // Pausar contexto de audio
+                if (audioContext && audioContext.state === 'running') {
+                    audioContext.suspend();
+                }
+            }
+        }
         const awsServiceColors = {
             s3: '#5a9d2e',          // Verde - Storage
             lambda: '#ff9900',      // Naranja - Compute
@@ -588,6 +825,9 @@
                 return;
             }
             
+            // Reproducir sonido de voltear carta
+            playFlipSound();
+            
             card.isFlipped = true;
             card.setTexture(`card-${card.cardData.name.toLowerCase()}`);
             flippedCards.push(card);
@@ -615,6 +855,9 @@
             const [card1, card2] = flippedCards;
             
             if (card1.cardData.name === card2.cardData.name) {
+                // Reproducir sonido de match
+                playMatchSound();
+                
                 card1.isMatched = true;
                 card2.isMatched = true;
                 card1.setTint(0x90EE90);
@@ -624,6 +867,9 @@
                 document.getElementById('pairs').textContent = `${matchedPairs}/${totalPairs}`;
                 
                 if (matchedPairs === totalPairs) {
+                    setTimeout(() => {
+                        playWinSound();
+                    }, 500);
                     gameWon.call(this);
                 }
             } else {
@@ -714,6 +960,12 @@
             document.getElementById('easy-button').textContent = t.easyButton;
             document.getElementById('hard-button').textContent = t.hardButton;
             
+            // Actualizar botón de sonido
+            const soundButton = document.getElementById('sound-toggle');
+            const soundText = soundEnabled ? t.soundOn : t.soundOff;
+            const soundIcon = soundEnabled ? '🔊' : '🔇';
+            soundButton.innerHTML = `${soundIcon} <span id="sound-text">${soundText}</span>`;
+            
             // Actualizar UI del juego
             document.getElementById('time-label').textContent = t.timeLabel;
             document.getElementById('pairs-label').textContent = t.pairsLabel;
@@ -797,6 +1049,16 @@
             
             // Inicializar interfaz con idioma por defecto
             updateUI();
+            
+            // Inicializar audio (se activará cuando el usuario interactúe)
+            document.addEventListener('click', () => {
+                if (!audioContext && soundEnabled) {
+                    initAudio();
+                    setTimeout(() => {
+                        createBackgroundMusic();
+                    }, 100);
+                }
+            }, { once: true });
             
             // Agregar listener para tecla ESC
             document.addEventListener('keydown', (event) => {
