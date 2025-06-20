@@ -1,0 +1,72 @@
+{
+    "name": "AWS Memory Game - Juego de Memoria de Servicios Amazon Web Services",
+    "short_name": "AWS Memory Game",
+    "description": "Aprende servicios AWS jugando. Juego de memoria retro 8-bits educativo y gratuito.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#232F3E",
+    "theme_color": "#FF9900",
+    "orientation": "landscape-primary",
+    "categories": ["games", "education", "entertainment"],
+    "lang": "es",
+    "dir": "ltr",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/screenshot-narrow.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Jugar Nivel Fácil",
+            "short_name": "Fácil",
+            "description": "Iniciar juego en modo fácil con 8 cartas",
+            "url": "/?level=easy",
+            "icons": [
+                {
+                    "src": "/shortcut-easy.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Jugar Nivel Difícil",
+            "short_name": "Difícil",
+            "description": "Iniciar juego en modo difícil con 18 cartas",
+            "url": "/?level=hard",
+            "icons": [
+                {
+                    "src": "/shortcut-hard.png",
+                    "sizes": "96x96"
+                }
+            ]
+        }
+    ]
+}

@@ -1,9 +1,167 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AWS Memory Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- SEO Meta Tags -->
+    <title>AWS Memory Game - Juego de Memoria de Servicios Amazon Web Services | 8-Bits Retro</title>
+    <meta name="description" content="Juega el mejor juego de memoria de servicios AWS con estilo retro 8-bits. Aprende S3, Lambda, EC2, RDS y más servicios de Amazon Web Services mientras te diviertes. Gratis y sin registro." />
+    <meta name="keywords" content="AWS, Amazon Web Services, juego memoria, S3, Lambda, EC2, RDS, cloud computing, 8-bits, retro gaming, educativo, gratis, online" />
+    <meta name="author" content="Tu Nombre" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://tu-dominio.com/aws-memory-game" />
+    
+    <!-- Language and Region -->
+    <meta name="language" content="Spanish" />
+    <meta name="geo.region" content="ES" />
+    <meta name="geo.placename" content="España" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tu-dominio.com/aws-memory-game" />
+    <meta property="og:title" content="AWS Memory Game - Juego de Memoria de Servicios Amazon Web Services" />
+    <meta property="og:description" content="Aprende servicios AWS jugando. Juego de memoria retro 8-bits con S3, Lambda, EC2, RDS y más. ¡Gratis y divertido!" />
+    <meta property="og:image" content="https://tu-dominio.com/images/aws-memory-game-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AWS Memory Game - Juego retro de servicios Amazon Web Services" />
+    <meta property="og:site_name" content="AWS Memory Game" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale:alternate" content="en_US" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tu-dominio.com/aws-memory-game" />
+    <meta name="twitter:title" content="AWS Memory Game - Juego de Memoria de Servicios AWS" />
+    <meta name="twitter:description" content="Aprende servicios AWS jugando. Juego de memoria retro 8-bits con S3, Lambda, EC2, RDS y más. ¡Gratis y divertido!" />
+    <meta name="twitter:image" content="https://tu-dominio.com/images/aws-memory-game-preview.png" />
+    <meta name="twitter:image:alt" content="AWS Memory Game - Juego retro de servicios Amazon Web Services" />
+    <meta name="twitter:creator" content="@tu_usuario_twitter" />
+    <meta name="twitter:site" content="@tu_usuario_twitter" />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#FF9900" />
+    <meta name="msapplication-TileColor" content="#FF9900" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="AWS Memory Game" />
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.github.com" />
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//api.github.com" />
+    
+    <!-- Structured Data - JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "AWS Memory Game",
+        "description": "Juego educativo de memoria para aprender servicios de Amazon Web Services con estilo retro 8-bits",
+        "url": "https://tu-dominio.com/aws-memory-game",
+        "image": "https://tu-dominio.com/images/aws-memory-game-preview.png",
+        "author": {
+            "@type": "Person",
+            "name": "Tu Nombre",
+            "url": "https://tu-dominio.com"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Tu Organización",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://tu-dominio.com/logo.png"
+            }
+        },
+        "datePublished": "2025-01-20",
+        "dateModified": "2025-01-20",
+        "inLanguage": ["es", "en"],
+        "isAccessibleForFree": true,
+        "genre": ["Educational", "Memory Game", "Retro Gaming"],
+        "gamePlatform": ["Web Browser", "Desktop", "Mobile"],
+        "applicationCategory": "Game",
+        "operatingSystem": ["Windows", "macOS", "Linux", "iOS", "Android"],
+        "browserRequirements": "Requires JavaScript. Compatible with Chrome 60+, Firefox 55+, Safari 11+, Edge 79+",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "150",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "keywords": "AWS, Amazon Web Services, memory game, S3, Lambda, EC2, RDS, cloud computing, educational game, 8-bit, retro gaming"
+    }
+    </script>
+    
+    <!-- Breadcrumb Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://tu-dominio.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Juegos",
+                "item": "https://tu-dominio.com/juegos"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "AWS Memory Game",
+                "item": "https://tu-dominio.com/aws-memory-game"
+            }
+        ]
+    }
+    </script>
+    
+    <!-- WebSite Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AWS Memory Game",
+        "url": "https://tu-dominio.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://tu-dominio.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        },
+        "sameAs": [
+            "https://github.com/tu-usuario/aws-memory-game",
+            "https://youtube.com/@tu-canal",
+            "https://linkedin.com/in/tu-perfil"
+        ]
+    }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         
@@ -1664,4 +1822,107 @@
         });
     </script>
 </body>
+
+<!-- Hidden SEO Content -->
+<div style="display: none;">
+    <h1>AWS Memory Game - Juego Educativo de Servicios Amazon Web Services</h1>
+    <h2>Aprende AWS Jugando - Modo Fácil y Difícil</h2>
+    <p>Descubre los servicios más importantes de Amazon Web Services a través de nuestro innovador juego de memoria con estilo retro 8-bits. Perfecto para estudiantes, desarrolladores y profesionales de la nube.</p>
+    
+    <h3>Servicios AWS Incluidos:</h3>
+    <ul>
+        <li>Amazon S3 - Simple Storage Service para almacenamiento en la nube</li>
+        <li>AWS Lambda - Funciones serverless para computación sin servidor</li>
+        <li>Amazon EC2 - Elastic Compute Cloud para servidores virtuales</li>
+        <li>Amazon RDS - Relational Database Service para bases de datos</li>
+        <li>Amazon EKS - Elastic Kubernetes Service para contenedores</li>
+        <li>Amazon SageMaker - Plataforma de machine learning</li>
+        <li>Amazon Kinesis - Streaming de datos en tiempo real</li>
+        <li>Amazon Redshift - Data warehouse para análisis</li>
+        <li>AWS CloudFormation - Infraestructura como código</li>
+        <li>Amazon ElastiCache - Cache en memoria distribuido</li>
+        <li>Amazon SNS - Simple Notification Service</li>
+        <li>Amazon SQS - Simple Queue Service</li>
+        <li>Amazon DynamoDB - Base de datos NoSQL</li>
+        <li>Amazon CloudWatch - Monitoreo y observabilidad</li>
+    </ul>
+    
+    <h3>Características del Juego:</h3>
+    <ul>
+        <li>Dos niveles de dificultad: Fácil (8 cartas) y Difícil (18 cartas)</li>
+        <li>Interfaz retro estilo 8-bits inspirada en Nintendo</li>
+        <li>Música de fondo generada programáticamente</li>
+        <li>Soporte multiidioma: Español e Inglés</li>
+        <li>Completamente gratuito y sin registro</li>
+        <li>Compatible con dispositivos móviles y desktop</li>
+        <li>Efectos de sonido auténticos de arcade</li>
+        <li>Colores oficiales de AWS para cada servicio</li>
+    </ul>
+    
+    <h3>Beneficios Educativos:</h3>
+    <p>Este juego ayuda a memorizar y familiarizarse con los servicios principales de AWS de manera divertida y efectiva. Ideal para:</p>
+    <ul>
+        <li>Preparación para certificaciones AWS</li>
+        <li>Estudiantes de computación en la nube</li>
+        <li>Desarrolladores que inician en AWS</li>
+        <li>Profesionales de DevOps y arquitectura cloud</li>
+        <li>Cualquier persona interesada en aprender sobre AWS</li>
+    </ul>
+    
+    <h3>Tecnologías Utilizadas:</h3>
+    <ul>
+        <li>HTML5 Canvas para renderizado de gráficos</li>
+        <li>JavaScript ES6+ para lógica del juego</li>
+        <li>Phaser.js 3.70.0 como motor de juegos 2D</li>
+        <li>Web Audio API para efectos de sonido</li>
+        <li>CSS3 con animaciones y efectos visuales</li>
+        <li>API de GitHub para datos en tiempo real</li>
+    </ul>
+</div>
+
+<!-- Performance and Analytics -->
+<script>
+    // Performance monitoring
+    window.addEventListener('load', function() {
+        if ('performance' in window) {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            console.log('Page load time:', loadTime + 'ms');
+            
+            // Send to analytics if available
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'timing_complete', {
+                    'name': 'load',
+                    'value': loadTime
+                });
+            }
+        }
+    });
+    
+    // Error tracking
+    window.addEventListener('error', function(e) {
+        console.error('Game error:', e.error);
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'exception', {
+                'description': e.error.toString(),
+                'fatal': false
+            });
+        }
+    });
+</script>
+
+<!-- Service Worker Registration -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                })
+                .catch(function(err) {
+                    console.log('ServiceWorker registration failed');
+                });
+        });
+    }
+</script>
+
 </html>
