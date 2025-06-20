@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AWS Memory Game</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
         body {
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
-            font-family: 'Courier New', monospace;
+            font-family: 'Press Start 2P', 'Courier New', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             position: relative;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
         }
         
         body::before {
@@ -44,14 +49,20 @@
         }
         
         #game-container {
-            border: 6px solid #232F3E;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.7);
-            background: rgba(0,0,0,0.85);
+            border: 8px solid #232F3E;
+            border-style: solid;
+            border-image: linear-gradient(45deg, #232F3E, #FF9900, #232F3E) 1;
+            box-shadow: 
+                0 0 0 4px #FF9900,
+                0 0 0 8px #232F3E,
+                inset 0 0 0 4px #FF9900,
+                0 0 30px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             backdrop-filter: blur(3px);
             position: relative;
             width: 800px;
             height: 600px;
+            image-rendering: pixelated;
         }
         
         #menu {
@@ -76,12 +87,28 @@
             right: 20px;
             background: #FF9900;
             color: #232F3E;
-            border: 2px solid #232F3E;
+            border: none;
             padding: 8px 12px;
-            font-size: 14px;
+            font-size: 10px;
             font-weight: bold;
-            border-radius: 5px;
+            font-family: 'Press Start 2P', monospace;
             cursor: pointer;
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF9900,
+                0 3px 0 2px #232F3E,
+                0 3px 0 4px rgba(0,0,0,0.3);
+            transition: all 0.1s ease;
+        }
+        
+        .language-selector:hover {
+            background: #FFB84D;
+            transform: translateY(-1px);
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF9900,
+                0 4px 0 2px #232F3E,
+                0 4px 0 4px rgba(0,0,0,0.3);
         }
         
         .sound-toggle {
@@ -90,56 +117,119 @@
             right: 180px;
             background: #FF9900;
             color: #232F3E;
-            border: 2px solid #232F3E;
+            border: none;
             padding: 8px 12px;
-            font-size: 16px;
+            font-size: 10px;
             font-weight: bold;
-            border-radius: 5px;
+            font-family: 'Press Start 2P', monospace;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.1s ease;
             min-width: 120px;
             text-align: center;
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF9900,
+                0 3px 0 2px #232F3E,
+                0 3px 0 4px rgba(0,0,0,0.3);
         }
         
         .sound-toggle:hover {
             background: #FFB84D;
             transform: translateY(-1px);
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF9900,
+                0 4px 0 2px #232F3E,
+                0 4px 0 4px rgba(0,0,0,0.3);
+        }
+        
+        .sound-toggle:active {
+            transform: translateY(2px);
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF9900,
+                0 1px 0 2px #232F3E,
+                0 1px 0 4px rgba(0,0,0,0.3);
         }
         
         .sound-toggle.muted {
             background: #666;
             color: #ccc;
+            box-shadow: 
+                0 0 0 2px #333,
+                0 0 0 4px #666,
+                0 3px 0 2px #333,
+                0 3px 0 4px rgba(0,0,0,0.3);
         }
         
         .menu-title {
-            font-size: 48px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            margin-bottom: 30px;
             color: #FF9900;
-            text-shadow: 4px 4px 0px #232F3E;
-            letter-spacing: 3px;
+            text-shadow: 
+                3px 3px 0px #232F3E,
+                6px 6px 0px rgba(0,0,0,0.5);
+            letter-spacing: 4px;
+            animation: pixelGlow 2s ease-in-out infinite alternate;
+            line-height: 1.3;
+        }
+        
+        @keyframes pixelGlow {
+            0% { 
+                text-shadow: 
+                    3px 3px 0px #232F3E,
+                    6px 6px 0px rgba(0,0,0,0.5);
+            }
+            100% { 
+                text-shadow: 
+                    3px 3px 0px #232F3E,
+                    6px 6px 0px rgba(0,0,0,0.5),
+                    0 0 15px #FF9900;
+            }
         }
         
         .menu-button {
-            background: linear-gradient(45deg, #FF9900, #FFB84D);
+            background: 
+                linear-gradient(45deg, #FF9900 0%, #FFB84D 50%, #FF9900 100%);
             color: #232F3E;
-            border: 3px solid #232F3E;
-            padding: 20px 40px;
-            margin: 15px;
-            font-size: 20px;
+            border: none;
+            padding: 16px 32px;
+            margin: 12px;
+            font-size: 12px;
             font-weight: bold;
+            font-family: 'Press Start 2P', monospace;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             min-width: 200px;
+            position: relative;
+            box-shadow: 
+                0 0 0 3px #232F3E,
+                0 0 0 6px #FF9900,
+                0 6px 0 3px #232F3E,
+                0 6px 0 6px rgba(0,0,0,0.4);
+            transition: all 0.1s ease;
         }
         
         .menu-button:hover {
-            background: linear-gradient(45deg, #232F3E, #3A4A5C);
-            color: #FF9900;
-            border-color: #FF9900;
+            background: 
+                linear-gradient(45deg, #FFB84D 0%, #FFCC66 50%, #FFB84D 100%);
             transform: translateY(-2px);
+            box-shadow: 
+                0 0 0 3px #232F3E,
+                0 0 0 6px #FF9900,
+                0 8px 0 3px #232F3E,
+                0 8px 0 6px rgba(0,0,0,0.4),
+                0 0 20px rgba(255, 153, 0, 0.5);
+        }
+        
+        .menu-button:active {
+            transform: translateY(3px);
+            box-shadow: 
+                0 0 0 3px #232F3E,
+                0 0 0 6px #FF9900,
+                0 3px 0 3px #232F3E,
+                0 3px 0 6px rgba(0,0,0,0.4);
         }
         
         #ui {
@@ -152,17 +242,41 @@
             justify-content: space-between;
             align-items: center;
             color: white;
-            font-size: 18px;
+            font-size: 12px;
             font-weight: bold;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 2px solid #FF9900;
+            font-family: 'Press Start 2P', monospace;
+            background: 
+                linear-gradient(45deg, rgba(35, 47, 62, 0.9) 0%, rgba(0,0,0,0.9) 100%);
+            padding: 12px 16px;
+            box-shadow: 
+                0 0 0 2px #FF9900,
+                0 0 0 4px #232F3E,
+                inset 0 0 0 2px #FF9900,
+                0 4px 8px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 0px #000000;
         }
         
         .ui-value {
             color: #FF9900;
-            font-size: 20px;
+            font-size: 14px;
+            text-shadow: 
+                2px 2px 0px #000000,
+                0 0 10px #FF9900;
+            animation: pixelPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pixelPulse {
+            0%, 100% { 
+                text-shadow: 
+                    2px 2px 0px #000000,
+                    0 0 10px #FF9900;
+            }
+            50% { 
+                text-shadow: 
+                    2px 2px 0px #000000,
+                    0 0 15px #FF9900,
+                    0 0 20px rgba(255, 153, 0, 0.5);
+            }
         }
         
         .hidden {
@@ -171,33 +285,47 @@
         
         .reset-button {
             position: absolute;
-            bottom: 5px;
+            bottom: 8px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
             color: white;
-            border: 3px solid #232F3E;
+            border: none;
             padding: 8px 16px;
-            font-size: 14px;
+            font-size: 10px;
             font-weight: bold;
+            font-family: 'Press Start 2P', monospace;
             cursor: pointer;
-            border-radius: 6px;
             z-index: 1001;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
+            transition: all 0.1s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF6B6B,
+                0 3px 0 2px #232F3E,
+                0 3px 0 4px rgba(0,0,0,0.4);
         }
         
         .reset-button:hover {
             background: linear-gradient(45deg, #FF5252, #FF7575);
             transform: translateX(-50%) translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF6B6B,
+                0 4px 0 2px #232F3E,
+                0 4px 0 4px rgba(0,0,0,0.4),
+                0 0 15px rgba(255, 107, 107, 0.5);
         }
         
         .reset-button:active {
-            transform: translateX(-50%) translateY(0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            transform: translateX(-50%) translateY(2px);
+            box-shadow: 
+                0 0 0 2px #232F3E,
+                0 0 0 4px #FF6B6B,
+                0 1px 0 2px #232F3E,
+                0 1px 0 4px rgba(0,0,0,0.4);
         }
         
         #phaser-game {
@@ -817,11 +945,13 @@
         function create() {
             console.log('Create iniciado');
             
-            // Título del juego
+            // Título del juego con estilo pixelado
             this.add.text(400, 80, 'AWS MEMORY GAME', {
-                fontSize: '28px',
+                fontSize: '20px',
                 fill: '#FF9900',
-                fontFamily: 'monospace'
+                fontFamily: 'Press Start 2P, monospace',
+                stroke: '#232F3E',
+                strokeThickness: 3
             }).setOrigin(0.5);
             
             setupCards.call(this);
@@ -1098,8 +1228,10 @@
             const text = this.add.text(textX, textY, card.cardData.name, {
                 fontSize: fontSize,
                 fill: '#FFFFFF',
-                fontFamily: 'monospace',
-                fontWeight: 'bold'
+                fontFamily: 'Press Start 2P, monospace',
+                fontWeight: 'bold',
+                stroke: '#000000',
+                strokeThickness: 2
             }).setOrigin(0.5);
             
             card.serviceText = text;
@@ -1151,15 +1283,19 @@
             
             this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
             this.add.text(400, 250, t.won, {
-                fontSize: '48px',
+                fontSize: '32px',
                 fill: '#90EE90',
-                fontFamily: 'monospace'
+                fontFamily: 'Press Start 2P, monospace',
+                stroke: '#000000',
+                strokeThickness: 4
             }).setOrigin(0.5);
             
             this.add.text(400, 320, `${t.timeRemaining} ${timeLeft}${t.seconds}`, {
-                fontSize: '20px',
+                fontSize: '14px',
                 fill: '#FFFFFF',
-                fontFamily: 'monospace'
+                fontFamily: 'Press Start 2P, monospace',
+                stroke: '#000000',
+                strokeThickness: 2
             }).setOrigin(0.5);
         }
 
@@ -1171,15 +1307,19 @@
             
             this.add.rectangle(400, 300, 800, 600, 0x000000, 0.8);
             this.add.text(400, 250, t.timeUp, {
-                fontSize: '40px',
+                fontSize: '28px',
                 fill: '#FF6B6B',
-                fontFamily: 'monospace'
+                fontFamily: 'Press Start 2P, monospace',
+                stroke: '#000000',
+                strokeThickness: 4
             }).setOrigin(0.5);
             
             this.add.text(400, 320, `${t.pairsFound} ${matchedPairs}/${totalPairs}`, {
-                fontSize: '20px',
+                fontSize: '14px',
                 fill: '#FFFFFF',
-                fontFamily: 'monospace'
+                fontFamily: 'Press Start 2P, monospace',
+                stroke: '#000000',
+                strokeThickness: 2
             }).setOrigin(0.5);
         }
 
