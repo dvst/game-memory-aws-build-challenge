@@ -183,7 +183,7 @@
                         • Lambda - Functions<br>
                         • EC2 - Virtual Servers<br>
                         • RDS - Databases<br>
-                        <strong>8 cartas - 30 segundos</strong>
+                        <strong>8 cartas (2×4) - 30s</strong>
                     </div>
                 </div>
                 
@@ -198,7 +198,7 @@
                         • ElastiCache - Cache<br>
                         • SNS - Notifications<br>
                         • SQS - Message Queue<br>
-                        <strong>16 cartas - 60 segundos</strong>
+                        <strong>16 cartas (3×6) - 60s</strong>
                     </div>
                 </div>
             </div>
@@ -505,17 +505,17 @@
             // Configuración según el nivel
             const isHardMode = currentLevel === 'hard';
             const totalCards = isHardMode ? 16 : 8;
-            const cols = isHardMode ? 4 : 4;
-            const rows = isHardMode ? 4 : 2;
+            const cols = isHardMode ? 6 : 4;  // 6 columnas para modo difícil
+            const rows = isHardMode ? 3 : 2;  // 3 filas para modo difícil
             
-            // Ajustar posicionamiento para que quepan todas las cartas
-            const startX = isHardMode ? 80 : 160;
-            const startY = isHardMode ? 90 : 120;
+            // Ajustar posicionamiento para la nueva disposición
+            const startX = isHardMode ? 50 : 160;   // Más hacia la izquierda para 6 columnas
+            const startY = isHardMode ? 120 : 120;  // Centrado verticalmente
             const cardWidth = 120;
             const cardHeight = 160;
-            const spacingX = isHardMode ? 15 : 40;
-            const spacingY = isHardMode ? 15 : 30;
-            const cardScale = isHardMode ? 0.7 : 1.0;
+            const spacingX = isHardMode ? 10 : 40;  // Menos espacio horizontal
+            const spacingY = isHardMode ? 25 : 30;  // Espacio vertical ajustado
+            const cardScale = isHardMode ? 0.65 : 1.0; // Escala más pequeña para que quepan 6 por fila
             
             cards = [];
             
