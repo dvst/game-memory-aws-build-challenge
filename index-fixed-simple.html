@@ -157,6 +157,7 @@
         },
         "sameAs": [
             "https://github.com/tu-usuario/aws-memory-game",
+            "https://tu-blog.com",
             "https://youtube.com/@tu-canal",
             "https://linkedin.com/in/tu-perfil"
         ]
@@ -488,6 +489,14 @@
             background: linear-gradient(45deg, #0099DD, #0077B5);
         }
         
+        .social-link.blog {
+            background: linear-gradient(45deg, #6B46C1, #8B5CF6);
+        }
+        
+        .social-link.blog:hover {
+            background: linear-gradient(45deg, #7C3AED, #A78BFA);
+        }
+        
         .social-icon {
             font-size: 10px;
         }
@@ -593,6 +602,11 @@
                 <span class="social-count" id="star-count">...</span>
             </a>
             
+            <a href="https://tu-blog.com" target="_blank" class="social-link blog" id="blog-link">
+                <span class="social-icon">📝</span>
+                <span id="blog-text">BLOG</span>
+            </a>
+            
             <a href="https://youtube.com/@tu-canal" target="_blank" class="social-link youtube" id="youtube-link">
                 <span class="social-icon">📺</span>
                 <span id="youtube-text">YOUTUBE</span>
@@ -660,6 +674,7 @@
         
         // Configuración de redes sociales
         const SOCIAL_LINKS = {
+            blog: 'https://tu-blog.com', // Cambia por tu blog
             youtube: 'https://youtube.com/@tu-canal', // Cambia por tu canal
             linkedin: 'https://linkedin.com/in/tu-perfil' // Cambia por tu perfil
         };
@@ -677,6 +692,7 @@
                 soundOn: 'Sonido ON',
                 soundOff: 'Sonido OFF',
                 githubLink: 'GITHUB',
+                blogLink: 'BLOG',
                 youtubeLink: 'YOUTUBE',
                 linkedinLink: 'LINKEDIN',
                 seconds: 's',
@@ -717,6 +733,7 @@
                 soundOn: 'Sound ON',
                 soundOff: 'Sound OFF',
                 githubLink: 'GITHUB',
+                blogLink: 'BLOG',
                 youtubeLink: 'YOUTUBE',
                 linkedinLink: 'LINKEDIN',
                 seconds: 's',
@@ -1706,10 +1723,12 @@
             
             // Actualizar enlaces sociales
             document.getElementById('github-text').textContent = t.githubLink;
+            document.getElementById('blog-text').textContent = t.blogLink;
             document.getElementById('youtube-text').textContent = t.youtubeLink;
             document.getElementById('linkedin-text').textContent = t.linkedinLink;
             
             // Actualizar URLs de redes sociales
+            document.getElementById('blog-link').href = SOCIAL_LINKS.blog;
             document.getElementById('youtube-link').href = SOCIAL_LINKS.youtube;
             document.getElementById('linkedin-link').href = SOCIAL_LINKS.linkedin;
             

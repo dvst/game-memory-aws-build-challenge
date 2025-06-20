@@ -146,6 +146,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 **Tu Nombre**
 - GitHub: [@tu-usuario](https://github.com/tu-usuario)
+- Blog: [Tu Blog](https://tu-blog.com)
 - LinkedIn: [Tu Perfil](https://linkedin.com/in/tu-perfil)
 - YouTube: [Tu Canal](https://youtube.com/@tu-canal)
 
