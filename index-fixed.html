@@ -292,11 +292,13 @@
                         { name: 'CloudFormation', description: 'Infraestructura como Código' },
                         { name: 'ElastiCache', description: 'Cache en Memoria' },
                         { name: 'SNS', description: 'Servicio de Notificaciones' },
-                        { name: 'SQS', description: 'Cola de Mensajes' }
+                        { name: 'SQS', description: 'Cola de Mensajes' },
+                        { name: 'DynamoDB', description: 'Base de Datos NoSQL' },
+                        { name: 'CloudWatch', description: 'Monitoreo y Logs' }
                     ]
                 },
                 easyInfo: '• S3 - Almacenamiento Simple<br>• Lambda - Funciones<br>• EC2 - Servidores Virtuales<br>• RDS - Bases de Datos<br><strong>8 cartas (2×4) - 30s</strong>',
-                hardInfo: '• EKS - Kubernetes<br>• SageMaker - Plataforma ML<br>• Kinesis - Streaming de Datos<br>• Redshift - Data Warehouse<br>• CloudFormation - IaC<br>• ElastiCache - Cache<br>• SNS - Notificaciones<br>• SQS - Cola de Mensajes<br><strong>16 cartas (3×6) - 60s</strong>'
+                hardInfo: '• EKS - Kubernetes<br>• SageMaker - Plataforma ML<br>• Kinesis - Streaming de Datos<br>• Redshift - Data Warehouse<br>• CloudFormation - IaC<br>• ElastiCache - Cache<br>• SNS - Notificaciones<br>• SQS - Cola de Mensajes<br>• DynamoDB - NoSQL DB<br>• CloudWatch - Monitoreo<br><strong>18 cartas (3×6) - 75s</strong>'
             },
             en: {
                 title: 'AWS MEMORY GAME',
@@ -329,11 +331,13 @@
                         { name: 'CloudFormation', description: 'Infrastructure as Code' },
                         { name: 'ElastiCache', description: 'In-Memory Cache' },
                         { name: 'SNS', description: 'Notification Service' },
-                        { name: 'SQS', description: 'Message Queue' }
+                        { name: 'SQS', description: 'Message Queue' },
+                        { name: 'DynamoDB', description: 'NoSQL Database' },
+                        { name: 'CloudWatch', description: 'Monitoring & Logs' }
                     ]
                 },
                 easyInfo: '• S3 - Simple Storage<br>• Lambda - Functions<br>• EC2 - Virtual Servers<br>• RDS - Databases<br><strong>8 cards (2×4) - 30s</strong>',
-                hardInfo: '• EKS - Kubernetes<br>• SageMaker - ML Platform<br>• Kinesis - Data Streaming<br>• Redshift - Data Warehouse<br>• CloudFormation - IaC<br>• ElastiCache - Cache<br>• SNS - Notifications<br>• SQS - Message Queue<br><strong>16 cards (3×6) - 60s</strong>'
+                hardInfo: '• EKS - Kubernetes<br>• SageMaker - ML Platform<br>• Kinesis - Data Streaming<br>• Redshift - Data Warehouse<br>• CloudFormation - IaC<br>• ElastiCache - Cache<br>• SNS - Notifications<br>• SQS - Message Queue<br>• DynamoDB - NoSQL DB<br>• CloudWatch - Monitoring<br><strong>18 cards (3×6) - 75s</strong>'
             }
         };
 
@@ -406,7 +410,7 @@
             graphics.clear();
             
             // Lista fija de servicios para generar texturas (independiente del idioma)
-            const allServiceNames = ['s3', 'lambda', 'ec2', 'rds', 'eks', 'sagemaker', 'kinesis', 'redshift', 'cloudformation', 'elasticache', 'sns', 'sqs'];
+            const allServiceNames = ['s3', 'lambda', 'ec2', 'rds', 'eks', 'sagemaker', 'kinesis', 'redshift', 'cloudformation', 'elasticache', 'sns', 'sqs', 'dynamodb', 'cloudwatch'];
             
             allServiceNames.forEach(serviceName => {
                 try {
@@ -656,6 +660,37 @@
                         graphics.fillRect(centerX + 10, centerY - 2, 6, 4);
                         break;
                         
+                    case 'dynamodb':
+                        // DynamoDB - NoSQL Database
+                        graphics.strokeCircle(centerX, centerY, 12);
+                        graphics.strokeCircle(centerX, centerY, 8);
+                        graphics.strokeCircle(centerX, centerY, 4);
+                        // Puntos de conexión
+                        graphics.fillCircle(centerX, centerY - 12, 2);
+                        graphics.fillCircle(centerX + 12, centerY, 2);
+                        graphics.fillCircle(centerX, centerY + 12, 2);
+                        graphics.fillCircle(centerX - 12, centerY, 2);
+                        break;
+                        
+                    case 'cloudwatch':
+                        // CloudWatch - Monitoring
+                        graphics.strokeRect(centerX - 12, centerY - 8, 24, 16);
+                        // Gráfico de líneas
+                        graphics.beginPath();
+                        graphics.moveTo(centerX - 8, centerY + 2);
+                        graphics.lineTo(centerX - 4, centerY - 2);
+                        graphics.lineTo(centerX, centerY + 4);
+                        graphics.lineTo(centerX + 4, centerY - 4);
+                        graphics.lineTo(centerX + 8, centerY + 2);
+                        graphics.stroke();
+                        // Puntos de datos
+                        graphics.fillCircle(centerX - 8, centerY + 2, 1);
+                        graphics.fillCircle(centerX - 4, centerY - 2, 1);
+                        graphics.fillCircle(centerX, centerY + 4, 1);
+                        graphics.fillCircle(centerX + 4, centerY - 4, 1);
+                        graphics.fillCircle(centerX + 8, centerY + 2, 1);
+                        break;
+                        
                     default:
                         // Icono por defecto
                         graphics.fillRect(centerX - 10, centerY - 10, 20, 20);
@@ -684,18 +719,43 @@
             
             // Configuración según el nivel
             const isHardMode = currentLevel === 'hard';
-            const totalCards = isHardMode ? 16 : 8;
+            const totalCards = isHardMode ? 18 : 8; // 18 cartas para modo difícil
             const cols = isHardMode ? 6 : 4;  // 6 columnas para modo difícil
             const rows = isHardMode ? 3 : 2;  // 3 filas para modo difícil
             
-            // Ajustar posicionamiento para la nueva disposición
-            const startX = isHardMode ? 50 : 160;   // Más hacia la izquierda para 6 columnas
-            const startY = isHardMode ? 120 : 120;  // Centrado verticalmente
+            // Calcular espaciado uniforme
+            const canvasWidth = 800;
+            const canvasHeight = 600;
             const cardWidth = 120;
             const cardHeight = 160;
-            const spacingX = isHardMode ? 10 : 40;  // Menos espacio horizontal
-            const spacingY = isHardMode ? 25 : 30;  // Espacio vertical ajustado
-            const cardScale = isHardMode ? 0.65 : 1.0; // Escala más pequeña para que quepan 6 por fila
+            
+            let cardScale, spacingX, spacingY, startX, startY;
+            
+            if (isHardMode) {
+                // Para 18 cartas (3×6)
+                cardScale = 0.6; // Cartas más pequeñas
+                const scaledCardWidth = cardWidth * cardScale;
+                const scaledCardHeight = cardHeight * cardScale;
+                
+                // Calcular espaciado para que sea uniforme
+                const totalCardsWidth = cols * scaledCardWidth;
+                const availableSpaceX = canvasWidth - totalCardsWidth;
+                spacingX = availableSpaceX / (cols + 1); // +1 para incluir bordes
+                
+                const totalCardsHeight = rows * scaledCardHeight;
+                const availableSpaceY = canvasHeight - totalCardsHeight - 120; // -120 para UI superior
+                spacingY = availableSpaceY / (rows + 1);
+                
+                startX = spacingX;
+                startY = 120 + spacingY; // 120 para dejar espacio al UI
+            } else {
+                // Para 8 cartas (2×4) - sin cambios
+                cardScale = 1.0;
+                spacingX = 40;
+                spacingY = 30;
+                startX = 160;
+                startY = 120;
+            }
             
             cards = [];
             
@@ -887,8 +947,8 @@
             
             // Configurar según el nivel
             if (level === 'hard') {
-                totalPairs = 8;
-                timeLeft = 60; // Más tiempo para el modo difícil
+                totalPairs = 9; // 9 pares = 18 cartas
+                timeLeft = 75; // Más tiempo para el modo difícil con más cartas
             } else {
                 totalPairs = 4;
                 timeLeft = 30;
