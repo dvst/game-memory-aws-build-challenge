@@ -14,13 +14,41 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/canvas');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            z-index: -1;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1);
+                opacity: 0.4;
+            }
+            50% { 
+                transform: translateY(-10px) scale(1.02);
+                opacity: 0.3;
+            }
         }
         
         #game-container {
             border: 6px solid #232F3E;
             border-radius: 12px;
             box-shadow: 0 0 30px rgba(0,0,0,0.7);
-            background: #000;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(3px);
             position: relative;
             width: 800px;
             height: 600px;
@@ -306,7 +334,237 @@
             }
         };
 
-        // Sistema de audio 8-bits
+        // Función para generar imagen de fondo estilo 8-bits
+        function generatePixelBackground() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Configurar tamaño del canvas
+            canvas.width = 1920;
+            canvas.height = 1080;
+            
+            // Crear gradiente de fondo
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#1a1a2e');
+            gradient.addColorStop(0.3, '#16213e');
+            gradient.addColorStop(0.7, '#0f3460');
+            gradient.addColorStop(1, '#533483');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Agregar patrón de puntos estilo 8-bits
+            ctx.fillStyle = 'rgba(255, 153, 0, 0.1)';
+            for (let x = 0; x < canvas.width; x += 20) {
+                for (let y = 0; y < canvas.height; y += 20) {
+                    if (Math.random() > 0.7) {
+                        ctx.fillRect(x, y, 2, 2);
+                    }
+                }
+            }
+            
+            // Dibujar iconos de servicios AWS flotantes
+            drawFloatingAWSIcons(ctx, canvas.width, canvas.height);
+            
+            // Dibujar cartas flotantes
+            drawFloatingCards(ctx, canvas.width, canvas.height);
+            
+            // Agregar efecto de escanlines
+            addScanlines(ctx, canvas.width, canvas.height);
+            
+            // Convertir a data URL y aplicar como fondo
+            const dataURL = canvas.toDataURL();
+            document.body.style.backgroundImage = `url(${dataURL})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundAttachment = 'fixed';
+        }
+
+        function drawFloatingAWSIcons(ctx, width, height) {
+            const iconSize = 32;
+            const iconCount = 25;
+            
+            // Colores de servicios AWS
+            const serviceColors = ['#5a9d2e', '#ff9900', '#3841c5', '#8c4fff', '#ff4b4b'];
+            
+            for (let i = 0; i < iconCount; i++) {
+                const x = Math.random() * (width - iconSize);
+                const y = Math.random() * (height - iconSize);
+                const color = serviceColors[Math.floor(Math.random() * serviceColors.length)];
+                const iconType = Math.floor(Math.random() * 5);
+                
+                ctx.fillStyle = color;
+                ctx.globalAlpha = 0.3;
+                
+                switch (iconType) {
+                    case 0: // S3 Bucket
+                        drawPixelS3(ctx, x, y, iconSize);
+                        break;
+                    case 1: // Lambda
+                        drawPixelLambda(ctx, x, y, iconSize);
+                        break;
+                    case 2: // EC2
+                        drawPixelEC2(ctx, x, y, iconSize);
+                        break;
+                    case 3: // Database
+                        drawPixelDatabase(ctx, x, y, iconSize);
+                        break;
+                    case 4: // Cloud
+                        drawPixelCloud(ctx, x, y, iconSize);
+                        break;
+                }
+                
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function drawPixelS3(ctx, x, y, size) {
+            const pixelSize = size / 16;
+            
+            // Dibujar bucket S3 pixelado
+            for (let row = 4; row < 12; row++) {
+                for (let col = 2; col < 14; col++) {
+                    if ((row === 4 || row === 11) && col >= 2 && col <= 13) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    } else if ((col === 2 || col === 13) && row >= 4 && row <= 11) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    } else if (row === 6 && col >= 4 && col <= 11) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    } else if (row === 8 && col >= 4 && col <= 11) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+
+        function drawPixelLambda(ctx, x, y, size) {
+            const pixelSize = size / 16;
+            
+            // Dibujar lambda pixelado
+            const lambdaPattern = [
+                [0,0,0,1,1,0,0,0],
+                [0,0,1,0,0,1,0,0],
+                [0,1,0,0,0,0,1,0],
+                [1,0,0,1,1,0,0,1],
+                [0,1,0,0,0,0,1,0],
+                [0,0,1,0,0,1,0,0],
+                [0,0,0,1,1,0,0,0]
+            ];
+            
+            for (let row = 0; row < lambdaPattern.length; row++) {
+                for (let col = 0; col < lambdaPattern[row].length; col++) {
+                    if (lambdaPattern[row][col]) {
+                        ctx.fillRect(x + (col + 4) * pixelSize, y + (row + 4) * pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+
+        function drawPixelEC2(ctx, x, y, size) {
+            const pixelSize = size / 16;
+            
+            // Dibujar servidor EC2 pixelado
+            for (let row = 3; row < 13; row++) {
+                for (let col = 2; col < 14; col++) {
+                    if ((row === 3 || row === 12) && col >= 2 && col <= 13) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    } else if ((col === 2 || col === 13) && row >= 3 && row <= 12) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+            
+            // LEDs del servidor
+            ctx.fillRect(x + 4 * pixelSize, y + 5 * pixelSize, pixelSize, pixelSize);
+            ctx.fillRect(x + 6 * pixelSize, y + 5 * pixelSize, pixelSize, pixelSize);
+            ctx.fillRect(x + 8 * pixelSize, y + 5 * pixelSize, pixelSize, pixelSize);
+        }
+
+        function drawPixelDatabase(ctx, x, y, size) {
+            const pixelSize = size / 16;
+            
+            // Dibujar base de datos pixelada
+            for (let row = 4; row < 12; row++) {
+                for (let col = 3; col < 13; col++) {
+                    if ((row === 4 || row === 11) && col >= 3 && col <= 12) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    } else if ((col === 3 || col === 12) && row >= 4 && row <= 11) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    } else if ((row === 6 || row === 8) && col >= 5 && col <= 10) {
+                        ctx.fillRect(x + col * pixelSize, y + row * pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+
+        function drawPixelCloud(ctx, x, y, size) {
+            const pixelSize = size / 16;
+            
+            // Dibujar nube pixelada
+            const cloudPattern = [
+                [0,0,1,1,1,1,0,0],
+                [0,1,0,0,0,0,1,0],
+                [1,0,0,1,1,0,0,1],
+                [1,0,1,0,0,1,0,1],
+                [1,0,0,0,0,0,0,1],
+                [0,1,1,1,1,1,1,0]
+            ];
+            
+            for (let row = 0; row < cloudPattern.length; row++) {
+                for (let col = 0; col < cloudPattern[row].length; col++) {
+                    if (cloudPattern[row][col]) {
+                        ctx.fillRect(x + (col + 4) * pixelSize, y + (row + 5) * pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+        }
+
+        function drawFloatingCards(ctx, width, height) {
+            const cardCount = 15;
+            const cardWidth = 40;
+            const cardHeight = 56;
+            
+            for (let i = 0; i < cardCount; i++) {
+                const x = Math.random() * (width - cardWidth);
+                const y = Math.random() * (height - cardHeight);
+                const rotation = (Math.random() - 0.5) * 0.5;
+                
+                ctx.save();
+                ctx.translate(x + cardWidth/2, y + cardHeight/2);
+                ctx.rotate(rotation);
+                ctx.globalAlpha = 0.2;
+                
+                // Carta de fondo
+                ctx.fillStyle = '#232F3E';
+                ctx.fillRect(-cardWidth/2, -cardHeight/2, cardWidth, cardHeight);
+                
+                // Borde
+                ctx.strokeStyle = '#FF9900';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-cardWidth/2, -cardHeight/2, cardWidth, cardHeight);
+                
+                // Patrón AWS mini
+                ctx.fillStyle = '#FF9900';
+                ctx.fillRect(-15, -10, 30, 2);
+                ctx.fillRect(-15, -6, 30, 2);
+                ctx.fillRect(-15, -2, 30, 2);
+                
+                ctx.restore();
+            }
+        }
+
+        function addScanlines(ctx, width, height) {
+            ctx.globalAlpha = 0.1;
+            ctx.fillStyle = '#000000';
+            
+            for (let y = 0; y < height; y += 4) {
+                ctx.fillRect(0, y, width, 2);
+            }
+            
+            ctx.globalAlpha = 1;
+        }
+
+        // Función para generar imagen de fondo estilo 8-bits
         function initAudio() {
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -1046,6 +1304,9 @@
         window.addEventListener('load', () => {
             console.log('AWS Memory Game cargado');
             console.log('Phaser disponible:', typeof Phaser !== 'undefined');
+            
+            // Generar imagen de fondo pixelada
+            generatePixelBackground();
             
             // Inicializar interfaz con idioma por defecto
             updateUI();
