@@ -1,50 +1,49 @@
-# AWS Memory Game 🎮 - Juego Educativo de Servicios Amazon Web Services
+# AWS Memory Game 🎮
+
+> 🇪🇸 **¿Prefieres leer en español?** [**Haz clic aquí para la versión en español**](README-ES.md)
 
 [![GitHub stars](https://img.shields.io/github/stars/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/network)
 [![GitHub issues](https://img.shields.io/github/issues/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/issues)
 [![License](https://img.shields.io/github/license/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/blob/main/LICENSE)
 
-## 🌟 Descripción
+## 🌟 Description
 
-**AWS Memory Game** es un juego educativo de memoria con estilo retro 8-bits diseñado para ayudar a estudiantes, desarrolladores y profesionales a aprender y memorizar los servicios principales de Amazon Web Services (AWS) de manera divertida e interactiva.
+**AWS Memory Game** is an educational 8-bit retro-style memory game designed to help students, developers, and professionals learn and memorize Amazon Web Services (AWS) core services in a fun and interactive way.
 
-### 🎯 Características Principales
+### 🎯 Key Features
 
-- ✅ **Dos niveles de dificultad**: Fácil (8 cartas) y Difícil (18 cartas)
-- ✅ **14 servicios AWS incluidos**: S3, Lambda, EC2, RDS, EKS, SageMaker, y más
-- ✅ **Estilo retro auténtico**: Inspirado en consolas Nintendo de 8-bits
-- ✅ **Música y efectos de sonido**: Generados programáticamente con Web Audio API
-- ✅ **Multiidioma**: Soporte completo para Español e Inglés
-- ✅ **Completamente gratuito**: Sin registro ni pagos requeridos
-- ✅ **Responsive**: Compatible con desktop y dispositivos móviles
-- ✅ **PWA Ready**: Instalable como aplicación web progresiva
+- ✅ **Two difficulty levels**: Easy (8 cards) and Hard (18 cards)
+- ✅ **14 AWS services included**: S3, Lambda, EC2, RDS, EKS, SageMaker, and more
+- ✅ **Authentic retro style**: Inspired by 8-bit Nintendo consoles
+- ✅ **Music and sound effects**: Programmatically generated with Web Audio API
+- ✅ **Multilingual**: Full support for Spanish and English
+- ✅ **Completely free**: No registration or payments required
+- ✅ **Responsive**: Compatible with desktop and mobile devices
+- ✅ **PWA Ready**: Installable as a progressive web app
 
-## 🚀 Demo en Vivo
+## 🚀 Live Demo
 
-🎮 **[Jugar Ahora](https://tu-dominio.com/aws-memory-game)**
+🎮 **[Play Now](http://aws-memory-game-javitech.s3-website-us-east-1.amazonaws.com)**
 
-## 📱 Capturas de Pantalla
+## 📱 Screenshots
 
-![AWS Memory Game - Menú Principal](screenshots/menu-principal.png)
-_Menú principal con estilo retro 8-bits_
+![AWS Memory Game - Easy Level](game-level-easy.jpeg)
+_Easy mode with 8 basic AWS services cards_
 
-![AWS Memory Game - Modo Fácil](screenshots/modo-facil.png)
-_Modo fácil con 8 cartas de servicios AWS básicos_
+![AWS Memory Game - Hard Level](game-level-hard.jpeg)
+_Hard mode with 18 advanced AWS services cards_
 
-![AWS Memory Game - Modo Difícil](screenshots/modo-dificil.png)
-_Modo difícil con 18 cartas de servicios AWS avanzados_
+## 🎓 AWS Services Included
 
-## 🎓 Servicios AWS Incluidos
-
-### Nivel Fácil (Servicios Básicos)
+### Easy Level (Basic Services)
 
 - **Amazon S3** - Simple Storage Service
-- **AWS Lambda** - Funciones Serverless
+- **AWS Lambda** - Serverless Functions
 - **Amazon EC2** - Elastic Compute Cloud
 - **Amazon RDS** - Relational Database Service
 
-### Nivel Difícil (Servicios Avanzados)
+### Hard Level (Advanced Services)
 
 - **Amazon EKS** - Elastic Kubernetes Service
 - **Amazon SageMaker** - Machine Learning Platform
@@ -57,125 +56,136 @@ _Modo difícil con 18 cartas de servicios AWS avanzados_
 - **Amazon DynamoDB** - NoSQL Database
 - **Amazon CloudWatch** - Monitoring & Observability
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Technologies Used
 
 - **Frontend**: HTML5, CSS3, JavaScript ES6+
 - **Game Engine**: Phaser.js 3.70.0
 - **Audio**: Web Audio API
 - **Fonts**: Press Start 2P (Google Fonts)
-- **APIs**: GitHub API para estadísticas en tiempo real
+- **APIs**: GitHub API for real-time statistics
 - **PWA**: Service Workers, Web App Manifest
+- **CI/CD**: GitHub Actions + AWS S3
 
-## 📦 Instalación Local
+## 📦 Local Installation
 
 ```bash
-# Clonar el repositorio
+# Clone the repository
 git clone https://github.com/dvst/game-memory-aws-build-challenge.git
 
-# Navegar al directorio
+# Navigate to directory
 cd game-memory-aws-build-challenge
 
-# Abrir en navegador
+# Open in browser
 open index.html
 ```
 
-### Requisitos del Sistema
+### System Requirements
 
-- Navegador web moderno (Chrome 60+, Firefox 55+, Safari 11+, Edge 79+)
-- JavaScript habilitado
-- Conexión a internet (opcional, para estadísticas de GitHub)
+- Modern web browser (Chrome 60+, Firefox 55+, Safari 11+, Edge 79+)
+- JavaScript enabled
+- Internet connection (optional, for GitHub statistics)
 
-## 🎮 Cómo Jugar
+## 🎮 How to Play
 
-1. **Selecciona tu idioma**: Español o Inglés
-2. **Elige dificultad**: Fácil (4 pares) o Difícil (9 pares)
-3. **Encuentra los pares**: Haz clic en las cartas para voltearlas
-4. **Memoriza ubicaciones**: Recuerda dónde están los servicios
-5. **Completa antes del tiempo**: ¡Gana encontrando todos los pares!
+1. **Select your language**: Spanish or English
+2. **Choose difficulty**: Easy (4 pairs) or Hard (9 pairs)
+3. **Find the pairs**: Click on cards to flip them
+4. **Memorize locations**: Remember where the services are
+5. **Complete before time runs out**: Win by finding all pairs!
 
-### Controles
+### Controls
 
-- **Clic izquierdo**: Voltear carta
-- **ESC**: Volver al menú principal
-- **Botón de sonido**: Activar/desactivar audio
+- **Left click**: Flip card
+- **ESC**: Return to main menu
+- **Sound button**: Toggle audio on/off
 
-## 🎯 Beneficios Educativos
+## 🎯 Educational Benefits
 
-Este juego es perfecto para:
+This game is perfect for:
 
-- 📚 **Estudiantes de Cloud Computing**
-- 🏗️ **Arquitectos de Soluciones AWS**
-- 💻 **Desarrolladores que inician en AWS**
-- 🔧 **Profesionales DevOps**
-- 📋 **Preparación para Certificaciones AWS**
-- 🎓 **Cursos y Bootcamps de AWS**
+- 📚 **Cloud Computing Students**
+- 🏗️ **AWS Solutions Architects**
+- 💻 **Developers starting with AWS**
+- 🔧 **DevOps Professionals**
+- 📋 **AWS Certification Preparation**
+- 🎓 **AWS Courses and Bootcamps**
 
-## 🌐 SEO y Rendimiento
+## 🌐 SEO and Performance
 
-- ✅ **Optimizado para buscadores**: Meta tags, Open Graph, Schema.org
-- ✅ **Core Web Vitals**: Carga rápida y experiencia fluida
-- ✅ **PWA Compliant**: Instalable y funciona offline
-- ✅ **Responsive Design**: Adaptado a todos los dispositivos
-- ✅ **Accesibilidad**: Cumple estándares WCAG
+- ✅ **Search engine optimized**: Meta tags, Open Graph, Schema.org
+- ✅ **Core Web Vitals**: Fast loading and smooth experience
+- ✅ **PWA Compliant**: Installable and works offline
+- ✅ **Responsive Design**: Adapted to all devices
+- ✅ **Accessibility**: Meets WCAG standards
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-¡Las contribuciones son bienvenidas! Por favor:
+Contributions are welcome! Please:
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Ideas para Contribuir
+### Ideas for Contributing
 
-- Agregar más servicios AWS
-- Mejorar gráficos y animaciones
-- Traducir a más idiomas
-- Optimizar rendimiento
-- Agregar nuevos modos de juego
+- Add more AWS services
+- Improve graphics and animations
+- Translate to more languages
+- Optimize performance
+- Add new game modes
 
-## 📊 Estadísticas del Proyecto
+## 📊 Project Statistics
 
 - ⭐ **GitHub Stars**: ![GitHub stars](https://img.shields.io/github/stars/dvst/game-memory-aws-build-challenge)
 - 🍴 **Forks**: ![GitHub forks](https://img.shields.io/github/forks/dvst/game-memory-aws-build-challenge)
 - 📥 **Downloads**: ![GitHub downloads](https://img.shields.io/github/downloads/dvst/game-memory-aws-build-challenge/total)
 - 🐛 **Issues**: ![GitHub issues](https://img.shields.io/github/issues/dvst/game-memory-aws-build-challenge)
 
-## 📄 Licencia
+## 🚀 Deployment
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+This project uses GitHub Actions for automatic deployment to AWS S3. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed setup instructions.
 
-## 👨‍💻 Autor
+### Quick Deploy
+
+1. Configure AWS S3 bucket
+2. Set up GitHub secrets
+3. Push to main branch
+4. Automatic deployment via GitHub Actions
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
 
 **DVST**
 
 - Website: [JaviTech.co](https://javitech.co)
 - GitHub: [@dvst](https://github.com/dvst)
-- Blog: [Tu Blog](https://tu-blog.com)
 - LinkedIn: [Javier Perez Puello](https://www.linkedin.com/in/javierperezp/)
-- YouTube: [Tu Canal](https://youtube.com/@javitech_co?sub_confirmation=1)
+- YouTube: [@javitech_co](https://youtube.com/@javitech_co?sub_confirmation=1)
 
-## 🙏 Agradecimientos
+## 🙏 Acknowledgments
 
-- [Phaser.js](https://phaser.io/) - Excelente motor de juegos 2D
-- [Google Fonts](https://fonts.google.com/) - Fuente Press Start 2P
-- [AWS](https://aws.amazon.com/) - Por crear servicios increíbles
-- Comunidad de desarrolladores que contribuyen al proyecto
+- [Phaser.js](https://phaser.io/) - Excellent 2D game engine
+- [Google Fonts](https://fonts.google.com/) - Press Start 2P font
+- [AWS](https://aws.amazon.com/) - For creating amazing services
+- Developer community contributing to the project
 
 ## 📈 Roadmap
 
-- [ ] Modo multijugador online
-- [ ] Más servicios AWS (100+ servicios)
-- [ ] Sistema de puntuaciones global
-- [ ] Modo torneo
-- [ ] Integración con AWS Educate
-- [ ] Versión móvil nativa
-- [ ] Soporte para más idiomas
+- [ ] Online multiplayer mode
+- [ ] More AWS services (100+ services)
+- [ ] Global leaderboard system
+- [ ] Tournament mode
+- [ ] AWS Educate integration
+- [ ] Native mobile version
+- [ ] Support for more languages
 
 ---
 
-⭐ **¡Si te gusta este proyecto, dale una estrella en GitHub!** ⭐
+⭐ **If you like this project, give it a star on GitHub!** ⭐
 
-🎮 **[Jugar Ahora](https://tu-dominio.com/aws-memory-game)** | 📚 **[Documentación](https://github.com/dvst/game-memory-aws-build-challenge/wiki)** | 🐛 **[Reportar Bug](https://github.com/dvst/game-memory-aws-build-challenge/issues)**
+🎮 **[Play Now](http://aws-memory-game-javitech.s3-website-us-east-1.amazonaws.com)** | 📚 **[Documentation](https://github.com/dvst/game-memory-aws-build-challenge/wiki)** | 🐛 **[Report Bug](https://github.com/dvst/game-memory-aws-build-challenge/issues)**
