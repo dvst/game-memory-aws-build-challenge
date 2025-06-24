@@ -1,0 +1,155 @@
+name: Deploy AWS Memory Game to S3
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  S3_BUCKET: aws-memory-game-javitech
+  AWS_REGION: us-east-1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: 🧪 Test and Validate
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🔍 Validate HTML
+      run: |
+        echo "🔍 Validating HTML structure..."
+        if [ ! -f "index.html" ]; then
+          echo "❌ index.html not found!"
+          exit 1
+        fi
+        echo "✅ index.html found"
+        
+    - name: 🔧 Validate config.js
+      run: |
+        echo "🔧 Validating config.js..."
+        if [ ! -f "config.js" ]; then
+          echo "❌ config.js not found!"
+          exit 1
+        fi
+        # Check if CONFIG object exists
+        if ! grep -q "const CONFIG" config.js; then
+          echo "❌ CONFIG object not found in config.js!"
+          exit 1
+        fi
+        echo "✅ config.js is valid"
+        
+    - name: 🔗 Run link checker
+      run: |
+        echo "🔗 Running link validation..."
+        chmod +x check_links.sh
+        ./check_links.sh
+        
+    - name: 📊 Project statistics
+      run: |
+        echo "📊 Project Statistics:"
+        echo "• HTML files: $(find . -name '*.html' | wc -l)"
+        echo "• JS files: $(find . -name '*.js' | wc -l)"
+        echo "• CSS files: $(find . -name '*.css' | wc -l)"
+        echo "• Total files: $(find . -type f | grep -v '.git' | wc -l)"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    name: 🚀 Deploy to S3
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🔧 Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: 🧹 Clean up files for deployment
+      run: |
+        echo "🧹 Preparing files for deployment..."
+        # Remove development files
+        rm -f check_links*.sh
+        rm -f test_config.html
+        rm -f aws-setup.sh
+        rm -f iam-setup.sh
+        rm -f *.json
+        rm -rf .git
+        rm -f .gitignore
+        
+        # List files to be deployed
+        echo "📦 Files to deploy:"
+        find . -type f | sort
+        
+    - name: 🚀 Deploy to S3
+      run: |
+        echo "🚀 Deploying to S3 bucket: $S3_BUCKET"
+        
+        # Sync files to S3 with proper content types
+        aws s3 sync . s3://$S3_BUCKET \
+          --delete \
+          --cache-control "public, max-age=31536000" \
+          --exclude "*.sh" \
+          --exclude "*.md" \
+          --exclude ".github/*"
+          
+        # Set specific cache control for HTML files
+        aws s3 cp index.html s3://$S3_BUCKET/index.html \
+          --content-type "text/html" \
+          --cache-control "public, max-age=300"
+          
+        # Set content type for JavaScript files
+        aws s3 cp config.js s3://$S3_BUCKET/config.js \
+          --content-type "application/javascript" \
+          --cache-control "public, max-age=86400"
+          
+    - name: 🌐 Invalidate CloudFront (if exists)
+      run: |
+        echo "🌐 Checking for CloudFront distribution..."
+        # This step is optional and will be skipped if no CloudFront is configured
+        if [ ! -z "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+          echo "🔄 Invalidating CloudFront cache..."
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+        else
+          echo "ℹ️ No CloudFront distribution configured, skipping invalidation"
+        fi
+        
+    - name: ✅ Deployment complete
+      run: |
+        echo "✅ Deployment completed successfully!"
+        echo "🌍 Your game is now live at:"
+        echo "   http://$S3_BUCKET.s3-website-$AWS_REGION.amazonaws.com"
+        echo ""
+        echo "📊 Deployment Summary:"
+        echo "• Bucket: $S3_BUCKET"
+        echo "• Region: $AWS_REGION"
+        echo "• Branch: ${{ github.ref_name }}"
+        echo "• Commit: ${{ github.sha }}"
+        echo "• Triggered by: ${{ github.actor }}"
+
+  notify:
+    needs: [test, deploy]
+    runs-on: ubuntu-latest
+    name: 📢 Notify
+    if: always()
+    
+    steps:
+    - name: 📢 Deployment notification
+      run: |
+        if [ "${{ needs.deploy.result }}" == "success" ]; then
+          echo "🎉 Deployment successful!"
+          echo "Game URL: http://$S3_BUCKET.s3-website-$AWS_REGION.amazonaws.com"
+        else
+          echo "❌ Deployment failed!"
+          echo "Check the logs above for details."
+        fi

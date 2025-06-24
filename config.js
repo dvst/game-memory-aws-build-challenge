@@ -48,8 +48,8 @@ const CONFIG = {
 
   // URLs del juego
   game: {
-    liveUrl: "https://dvst.github.io/game-memory-aws-build-challenge",
-    demoUrl: "https://dvst.github.io/game-memory-aws-build-challenge",
+    liveUrl: "http://aws-memory-game-javitech.s3-website-us-east-1.amazonaws.com",
+    demoUrl: "http://aws-memory-game-javitech.s3-website-us-east-1.amazonaws.com",
   },
 
   // Textos de la interfaz
