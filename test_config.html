@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CONFIG Integration</title>
+</head>
+<body>
+    <h1>Test de Integración CONFIG.js</h1>
+    
+    <div id="test-results"></div>
+    
+    <script src="config.js"></script>
+    <script>
+        function testConfig() {
+            const results = document.getElementById('test-results');
+            let html = '<h2>Resultados del Test:</h2><ul>';
+            
+            // Test GitHub config
+            html += `<li><strong>GitHub Owner:</strong> ${CONFIG.github.owner}</li>`;
+            html += `<li><strong>GitHub Repo:</strong> ${CONFIG.github.repo}</li>`;
+            html += `<li><strong>GitHub URL:</strong> ${CONFIG.github.url}</li>`;
+            
+            // Test Social Links
+            html += `<li><strong>Website:</strong> ${CONFIG.social.website.url}</li>`;
+            html += `<li><strong>Blog:</strong> ${CONFIG.social.blog.url}</li>`;
+            html += `<li><strong>YouTube:</strong> ${CONFIG.social.youtube.url}</li>`;
+            html += `<li><strong>LinkedIn:</strong> ${CONFIG.social.linkedin.url}</li>`;
+            
+            // Test UI Texts
+            html += `<li><strong>UI ES Website:</strong> ${CONFIG.ui.es.websiteLink}</li>`;
+            html += `<li><strong>UI EN Website:</strong> ${CONFIG.ui.en.websiteLink}</li>`;
+            
+            html += '</ul>';
+            results.innerHTML = html;
+        }
+        
+        // Ejecutar test cuando cargue la página
+        window.addEventListener('load', testConfig);
+    </script>
+</body>
+</html>

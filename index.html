@@ -159,7 +159,7 @@
             "https://javitech.co",
             "https://github.com/dvst/",
             "https://dev.to/javitech_co",
-            "https://youtube.com/@javitech_co",
+            "https://youtube.com/@javitech_co?sub_confirmation=1",
             "https://linkedin.com/in/javierperezp"
         ]
     }
@@ -605,28 +605,28 @@
 <body>
     <div id="game-container">
         <div class="social-links">
-            <a href="https://javitech.co" target="_blank" class="social-link website" id="website-link">
+            <a href="#" target="_blank" class="social-link website" id="website-link">
                 <span class="social-icon">🌐</span>
                 <span id="website-text">WEBSITE</span>
             </a>
             
-            <a href="https://github.com/dvst" target="_blank" class="social-link github" id="github-link">
+            <a href="#" target="_blank" class="social-link github" id="github-link">
                 <span class="github-star">⭐</span>
                 <span id="github-text">GITHUB</span>
                 <span class="social-count" id="star-count">...</span>
             </a>
             
-            <a href="https://youtube.com/@javitech_co" target="_blank" class="social-link youtube" id="youtube-link">
+            <a href="#" target="_blank" class="social-link youtube" id="youtube-link">
                 <span class="social-icon">📺</span>
                 <span id="youtube-text">YOUTUBE</span>
             </a>
             
-            <a href="https://linkedin.com/in/javierperezp" target="_blank" class="social-link linkedin" id="linkedin-link">
+            <a href="#" target="_blank" class="social-link linkedin" id="linkedin-link">
                 <span class="social-icon">💼</span>
                 <span id="linkedin-text">LINKEDIN</span>
             </a>
             
-            <a href="https://dev.to/javitech_co" target="_blank" class="social-link blog" id="blog-link">
+            <a href="#" target="_blank" class="social-link blog" id="blog-link">
                 <span class="social-icon">📝</span>
                 <span id="blog-text">BLOG</span>
             </a>
@@ -661,6 +661,7 @@
     </div>
 
     <script src="public/lib/phaser.min.js"></script>
+    <script src="config.js"></script>
     <script>
         // Variables globales del juego
         let game = null;
@@ -680,17 +681,10 @@
         let soundEnabled = true;
         let musicGainNode = null;
         
-        // Configuración del repositorio de GitHub
+        // Configuración del repositorio de GitHub (desde config.js)
         const GITHUB_REPO = {
-            owner: 'tu-usuario', // Cambia por tu usuario de GitHub
-            name: 'aws-memory-game' // Cambia por el nombre de tu repositorio
-        };
-        
-        // Configuración de redes sociales
-        const SOCIAL_LINKS = {
-            blog: 'https://tu-blog.com', // Cambia por tu blog
-            youtube: 'https://youtube.com/@tu-canal', // Cambia por tu canal
-            linkedin: 'https://linkedin.com/in/tu-perfil' // Cambia por tu perfil
+            owner: CONFIG.github.owner,
+            name: CONFIG.github.repo
         };
 
         // Sistema de traducciones
@@ -705,11 +699,11 @@
                 resetButton: 'Volver al Menú',
                 soundOn: 'Sonido ON',
                 soundOff: 'Sonido OFF',
-                websiteLink: 'JAVITECH.CO',
-                githubLink: 'GITHUB',
-                blogLink: 'BLOG',
-                youtubeLink: 'YOUTUBE',
-                linkedinLink: 'LINKEDIN',
+                websiteLink: CONFIG.ui.es.websiteLink,
+                githubLink: CONFIG.ui.es.githubLink,
+                blogLink: CONFIG.ui.es.blogLink,
+                youtubeLink: CONFIG.ui.es.youtubeLink,
+                linkedinLink: CONFIG.ui.es.linkedinLink,
                 seconds: 's',
                 easy: 'FÁCIL',
                 hard: 'DIFÍCIL',
@@ -747,11 +741,11 @@
                 resetButton: 'Back to Menu',
                 soundOn: 'Sound ON',
                 soundOff: 'Sound OFF',
-                websiteLink: 'WEBSITE',
-                githubLink: 'GITHUB',
-                blogLink: 'BLOG',
-                youtubeLink: 'YOUTUBE',
-                linkedinLink: 'LINKEDIN',
+                websiteLink: CONFIG.ui.en.websiteLink,
+                githubLink: CONFIG.ui.en.githubLink,
+                blogLink: CONFIG.ui.en.blogLink,
+                youtubeLink: CONFIG.ui.en.youtubeLink,
+                linkedinLink: CONFIG.ui.en.linkedinLink,
                 seconds: 's',
                 easy: 'EASY',
                 hard: 'HARD',
@@ -1027,6 +1021,39 @@
                 console.log('Error fetching GitHub data:', error);
                 // Fallback: mostrar enlace sin contador
                 updateGitHubLink('⭐', `https://github.com/${GITHUB_REPO.owner}/${GITHUB_REPO.name}`);
+            }
+        }
+
+        // Función para inicializar enlaces sociales desde CONFIG
+        function initializeSocialLinks() {
+            // Website link
+            const websiteLink = document.getElementById('website-link');
+            if (websiteLink) {
+                websiteLink.href = CONFIG.social.website.url;
+            }
+            
+            // GitHub link (se actualizará después con la API)
+            const githubLink = document.getElementById('github-link');
+            if (githubLink) {
+                githubLink.href = CONFIG.social.github.url;
+            }
+            
+            // Blog link
+            const blogLink = document.getElementById('blog-link');
+            if (blogLink) {
+                blogLink.href = CONFIG.social.blog.url;
+            }
+            
+            // YouTube link
+            const youtubeLink = document.getElementById('youtube-link');
+            if (youtubeLink) {
+                youtubeLink.href = CONFIG.social.youtube.url;
+            }
+            
+            // LinkedIn link
+            const linkedinLink = document.getElementById('linkedin-link');
+            if (linkedinLink) {
+                linkedinLink.href = CONFIG.social.linkedin.url;
             }
         }
 
@@ -1744,11 +1771,6 @@
             document.getElementById('youtube-text').textContent = t.youtubeLink;
             document.getElementById('linkedin-text').textContent = t.linkedinLink;
             
-            // Actualizar URLs de redes sociales (javitech.co ya está hardcodeado)
-            document.getElementById('blog-link').href = SOCIAL_LINKS.blog;
-            document.getElementById('youtube-link').href = SOCIAL_LINKS.youtube;
-            document.getElementById('linkedin-link').href = SOCIAL_LINKS.linkedin;
-            
             // Actualizar UI del juego
             document.getElementById('time-label').textContent = t.timeLabel;
             document.getElementById('pairs-label').textContent = t.pairsLabel;
@@ -1835,6 +1857,9 @@
             
             // Inicializar interfaz con idioma por defecto
             updateUI();
+            
+            // Inicializar enlaces sociales desde configuración
+            initializeSocialLinks();
             
             // Cargar información del repositorio de GitHub
             fetchGitHubRepoInfo();

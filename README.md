@@ -1,9 +1,9 @@
 # AWS Memory Game 🎮 - Juego Educativo de Servicios Amazon Web Services
 
-[![GitHub stars](https://img.shields.io/github/stars/tu-usuario/aws-memory-game?style=for-the-badge)](https://github.com/tu-usuario/aws-memory-game/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/tu-usuario/aws-memory-game?style=for-the-badge)](https://github.com/tu-usuario/aws-memory-game/network)
-[![GitHub issues](https://img.shields.io/github/issues/tu-usuario/aws-memory-game?style=for-the-badge)](https://github.com/tu-usuario/aws-memory-game/issues)
-[![License](https://img.shields.io/github/license/tu-usuario/aws-memory-game?style=for-the-badge)](https://github.com/tu-usuario/aws-memory-game/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/network)
+[![GitHub issues](https://img.shields.io/github/issues/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/issues)
+[![License](https://img.shields.io/github/license/dvst/game-memory-aws-build-challenge?style=for-the-badge)](https://github.com/dvst/game-memory-aws-build-challenge/blob/main/LICENSE)
 
 ## 🌟 Descripción
 
@@ -27,23 +27,25 @@
 ## 📱 Capturas de Pantalla
 
 ![AWS Memory Game - Menú Principal](screenshots/menu-principal.png)
-*Menú principal con estilo retro 8-bits*
+_Menú principal con estilo retro 8-bits_
 
 ![AWS Memory Game - Modo Fácil](screenshots/modo-facil.png)
-*Modo fácil con 8 cartas de servicios AWS básicos*
+_Modo fácil con 8 cartas de servicios AWS básicos_
 
 ![AWS Memory Game - Modo Difícil](screenshots/modo-dificil.png)
-*Modo difícil con 18 cartas de servicios AWS avanzados*
+_Modo difícil con 18 cartas de servicios AWS avanzados_
 
 ## 🎓 Servicios AWS Incluidos
 
 ### Nivel Fácil (Servicios Básicos)
+
 - **Amazon S3** - Simple Storage Service
 - **AWS Lambda** - Funciones Serverless
 - **Amazon EC2** - Elastic Compute Cloud
 - **Amazon RDS** - Relational Database Service
 
 ### Nivel Difícil (Servicios Avanzados)
+
 - **Amazon EKS** - Elastic Kubernetes Service
 - **Amazon SageMaker** - Machine Learning Platform
 - **Amazon Kinesis** - Data Streaming Service
@@ -68,16 +70,17 @@
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/aws-memory-game.git
+git clone https://github.com/dvst/game-memory-aws-build-challenge.git
 
 # Navegar al directorio
-cd aws-memory-game
+cd game-memory-aws-build-challenge
 
 # Abrir en navegador
-open index-fixed-simple.html
+open index.html
 ```
 
 ### Requisitos del Sistema
+
 - Navegador web moderno (Chrome 60+, Firefox 55+, Safari 11+, Edge 79+)
 - JavaScript habilitado
 - Conexión a internet (opcional, para estadísticas de GitHub)
@@ -91,6 +94,7 @@ open index-fixed-simple.html
 5. **Completa antes del tiempo**: ¡Gana encontrando todos los pares!
 
 ### Controles
+
 - **Clic izquierdo**: Voltear carta
 - **ESC**: Volver al menú principal
 - **Botón de sonido**: Activar/desactivar audio
@@ -125,6 +129,7 @@ Este juego es perfecto para:
 5. Abre un Pull Request
 
 ### Ideas para Contribuir
+
 - Agregar más servicios AWS
 - Mejorar gráficos y animaciones
 - Traducir a más idiomas
@@ -133,10 +138,10 @@ Este juego es perfecto para:
 
 ## 📊 Estadísticas del Proyecto
 
-- ⭐ **GitHub Stars**: ![GitHub stars](https://img.shields.io/github/stars/tu-usuario/aws-memory-game)
-- 🍴 **Forks**: ![GitHub forks](https://img.shields.io/github/forks/tu-usuario/aws-memory-game)
-- 📥 **Downloads**: ![GitHub downloads](https://img.shields.io/github/downloads/tu-usuario/aws-memory-game/total)
-- 🐛 **Issues**: ![GitHub issues](https://img.shields.io/github/issues/tu-usuario/aws-memory-game)
+- ⭐ **GitHub Stars**: ![GitHub stars](https://img.shields.io/github/stars/dvst/game-memory-aws-build-challenge)
+- 🍴 **Forks**: ![GitHub forks](https://img.shields.io/github/forks/dvst/game-memory-aws-build-challenge)
+- 📥 **Downloads**: ![GitHub downloads](https://img.shields.io/github/downloads/dvst/game-memory-aws-build-challenge/total)
+- 🐛 **Issues**: ![GitHub issues](https://img.shields.io/github/issues/dvst/game-memory-aws-build-challenge)
 
 ## 📄 Licencia
 
@@ -144,12 +149,13 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ## 👨‍💻 Autor
 
-**Tu Nombre**
+**DVST**
+
 - Website: [JaviTech.co](https://javitech.co)
-- GitHub: [@tu-usuario](https://github.com/tu-usuario)
+- GitHub: [@dvst](https://github.com/dvst)
 - Blog: [Tu Blog](https://tu-blog.com)
-- LinkedIn: [Tu Perfil](https://linkedin.com/in/tu-perfil)
-- YouTube: [Tu Canal](https://youtube.com/@tu-canal)
+- LinkedIn: [Javier Perez Puello](https://www.linkedin.com/in/javierperezp/)
+- YouTube: [Tu Canal](https://youtube.com/@javitech_co?sub_confirmation=1)
 
 ## 🙏 Agradecimientos
 
@@ -172,4 +178,4 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ⭐ **¡Si te gusta este proyecto, dale una estrella en GitHub!** ⭐
 
-🎮 **[Jugar Ahora](https://tu-dominio.com/aws-memory-game)** | 📚 **[Documentación](https://github.com/tu-usuario/aws-memory-game/wiki)** | 🐛 **[Reportar Bug](https://github.com/tu-usuario/aws-memory-game/issues)**
+🎮 **[Jugar Ahora](https://tu-dominio.com/aws-memory-game)** | 📚 **[Documentación](https://github.com/dvst/game-memory-aws-build-challenge/wiki)** | 🐛 **[Reportar Bug](https://github.com/dvst/game-memory-aws-build-challenge/issues)**

@@ -1,18 +1,37 @@
 {
   "name": "aws-memory-game",
   "version": "1.0.0",
-  "description": "AWS Memory Game with Phaser and React",
-  "main": "index.js",
+  "description": "AWS Memory Game - Juego Educativo de Servicios Amazon Web Services",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dvst/game-memory-aws-build-challenge.git"
+  },
+  "homepage": "https://github.com/dvst/game-memory-aws-build-challenge",
+  "bugs": {
+    "url": "https://github.com/dvst/game-memory-aws-build-challenge/issues"
+  },
+  "author": {
+    "name": "DVST",
+    "url": "https://github.com/dvst",
+    "email": "contact@javitech.co"
+  },
+  "license": "MIT",
+  "keywords": [
+    "aws",
+    "memory-game",
+    "educational",
+    "phaser",
+    "javascript",
+    "game",
+    "learning"
+  ],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "python3 -m http.server 8000",
+    "build": "echo 'Static site - no build needed'",
+    "test": "echo 'No tests specified'"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
     "phaser": "^3.70.0"
   },
   "browserslist": {
